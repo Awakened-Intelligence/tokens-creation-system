@@ -26,11 +26,27 @@ This backend is a Flask-based API that supports the generation, deployment, veri
 ## Prerequisites
 
 - **Python 3.8+**  
-- **pip** for installing dependencies  
+- **pip** for installing dependencies
+- **Hardhat:** Required to flatten contracts. Hardhat should be installed in the `@openzeppelin/contracts` folder (see Hardhat Setup below).  
 - A properly configured `.env` file with the following variables:
   - `INFURA_URL`: Your Infura project URL.
   - `LINEASCAN_API_KEY`: API key for the contract verification API.
   - `CHAIN_ID`: The chain ID (e.g., `11155111` for Sepolia).
+ ## Hardhat Setup in `@openzeppelin/contracts` Folder
+
+The backend uses Hardhat to flatten Solidity contracts before deployment. To set up Hardhat in the `@openzeppelin/contracts` folder:
+
+1. **Navigate to the Contracts Directory:**
+   ```bash
+   cd @openzeppelin/contracts
+   Initialize a Node.js Project (if not already done):
+     -npm init -y
+    
+   Install Hardhat as a Dev Dependency:
+     -npm install --save-dev hardhat
+    
+   Initialize Hardhat Configuration: Run the following command and follow the prompts:
+     -npx hardhat
   
 ## Installation
 

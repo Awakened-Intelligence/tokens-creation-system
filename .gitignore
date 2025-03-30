@@ -1,5 +1,5 @@
 node_modules/ 
 .env 
-# Ignore frontend package files
-frontend/package.json
-frontend/package-lock.json
+# Ignore package files
+package.json
+package-lock.json

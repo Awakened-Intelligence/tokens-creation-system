@@ -33,3 +33,4 @@ This React application allows users to generate, deploy, verify, and store ERC-2
 1. **Clone the Repository or Navigate to the Frontend Directory:**
    ```bash
    cd frontend
+"Instructions on how to install and run the frontend locally." 

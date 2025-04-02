@@ -1,7 +1,2 @@
 node_modules/ 
-.env 
-# Ignore package files
-package.json
-package-lock.json
-backend/@openzeppelin/contracts/package.json
-backend/@openzeppelin/contracts/package-lock.json
+.env

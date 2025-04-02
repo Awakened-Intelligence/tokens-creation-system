@@ -32,25 +32,56 @@ This backend is a Flask-based API that supports the generation, deployment, veri
   - `INFURA_URL`: Your Infura project URL.
   - `LINEASCAN_API_KEY`: API key for the contract verification API.
   - `CHAIN_ID`: The chain ID (e.g., `11155111` for Sepolia).
- ## Hardhat Setup in `@openzeppelin/contracts` Folder
+## Environment Setup with Virtual Environment (venv)
 
-The backend uses Hardhat to flatten Solidity contracts before deployment. To set up Hardhat in the `@openzeppelin/contracts` folder:
+It is **strongly recommended** to use a Python virtual environment to isolate your project's dependencies. Since your project uses a `requirements.txt` file (generated within your venv), follow these steps:
 
+1. **Navigate to the backend directory:**
+cd backend
+2. **Create a virtual environment (if not already created):** 
+python -m venv venv
+3. **Activate the virtual environment:**
+On macOS/Linux:
+source venv/bin/activate
+On Windows:
+venv\Scripts\activate
+4. **Install the required Python packages:**
+pip install -r requirements.txt
+5. **(Optional) Verify that your editor (e.g., VSCode) is using the correct interpreter:**
+In VSCode, press Ctrl+Shift+P (or Cmd+Shift+P on macOS) and select "Python: Select Interpreter"; choose the one that indicates (venv).
+Using a venv ensures that your dependencies are isolated and reproducible across environments.
+
+## Hardhat Setup in @openzeppelin/contracts Folder**
+The backend uses Hardhat to flatten Solidity contracts before deployment. To set up Hardhat in the @openzeppelin/contracts folder:
 1. **Navigate to the Contracts Directory:**
-   ```bash
-   cd @openzeppelin/contracts
-   Initialize a Node.js Project (if not already done):
-     -npm init -y
-    
-   Install Hardhat as a Dev Dependency:
-     -npm install --save-dev hardhat
-    
-   Initialize Hardhat Configuration: Run the following command and follow the prompts:
-     -npx hardhat
-  
-## Installation
+cd @openzeppelin/contracts
+2. **Initialize a Node.js Project (if not already done):**
+npm init -y
+3. **Install Hardhat as a Dev Dependency:**
+npm install --save-dev hardhat
+4. **Initialize Hardhat Configuration: Run the following command and follow the prompts:**
+npx hardhat
+You can choose "Create a basic sample project" (or set up manually). This will generate a hardhat.config.js file.
 
+5. **Flattening Command: The backend uses a command similar to:**
+npx hardhat flatten MyToken.sol > flattened_MyToken.sol
+Ensure that MyToken.sol is in the correct location or update the path in your backend code accordingly.
+
+## Installation
 1. **Clone the Repository:**
-   ```bash
-   git clone https://your.repo.url.git
-   cd backend
+git clone https://your.repo.url.git
+cd backend
+2. **Create and Activate a Virtual Environment:**
+python -m venv venv
+source venv/bin/activate     # On Windows: venv\Scripts\activate
+3. **Install Python Dependencies:**
+pip install -r requirements.txt
+4. **Configure Environment Variables:**
+Create a .env file in the root directory of the backend with contents similar to:
+INFURA_URL=https://sepolia.infura.io/v3/your_project_id
+LINEASCAN_API_KEY=your_lineascan_api_key
+CHAIN_ID=11155111
+5. **Set Up Hardhat in @openzeppelin/contracts:**
+Follow the Hardhat setup instructions above.
+6. **Run the Backend Server:**
+python server.py

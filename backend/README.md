@@ -51,7 +51,7 @@ pip install -r requirements.txt
 In VSCode, press Ctrl+Shift+P (or Cmd+Shift+P on macOS) and select "Python: Select Interpreter"; choose the one that indicates (venv).
 Using a venv ensures that your dependencies are isolated and reproducible across environments.
 
-## Hardhat Setup in @openzeppelin/contracts Folder**
+## Hardhat Setup in @openzeppelin/contracts Folder
 The backend uses Hardhat to flatten Solidity contracts before deployment. To set up Hardhat in the @openzeppelin/contracts folder:
 1. **Navigate to the Contracts Directory:**
 cd @openzeppelin/contracts

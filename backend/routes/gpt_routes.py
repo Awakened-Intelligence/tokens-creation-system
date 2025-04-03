@@ -1,3 +1,32 @@
+# from flask import Blueprint, request, jsonify
+# from services.gpt_service import generate_smart_contract
+
+# gpt_bp = Blueprint("gpt", __name__)
+
+# @gpt_bp.route('/generate-smart-contract', methods=['POST'])
+# def generate_contract():
+#     try:
+#         # Extract JSON payload from frontend or Postman
+#         data = request.json  
+
+#         # Debugging: Print the received payload
+#         print(" Received Payload:", data)
+
+#         # Ensure all required fields are present
+#         required_fields = ["token_name", "token_symbol", "total_supply", "decimals", "burn_rate", "staking", "mintable"]
+#         for field in required_fields:
+#             if field not in data:
+#                 return jsonify({"error": f"Missing required field: {field}"}), 400
+
+#         # Call GPT-4 to generate Solidity smart contract
+#         solidity_code = generate_smart_contract(data)  
+
+#         # Return generated contract to frontend/Postman
+#         return jsonify({"smart_contract_code": solidity_code}), 200
+
+#     except Exception as e:
+#         print(" Backend Error:", str(e))  # Debugging
+#         return jsonify({"error": str(e)}), 400
 
 from flask import Blueprint, request, jsonify
 from services.gpt_service import generate_smart_contract

@@ -1,5 +1,182 @@
 
 
+
+# import os
+# import json
+# from web3 import Web3
+# from solcx import compile_source, install_solc
+# from dotenv import load_dotenv
+# from models.user_model import UserModel
+# from database.db import db
+# from services.Auth_service import AuthService
+
+# # Load environment variables
+# load_dotenv()
+
+# INFURA_URL = os.getenv("INFURA_URL")
+# INFURA_PRIVATE_KEY=os.getenv("INFURA_PRIVATE_KEY")
+# print(f"🧾 Loaded Private Key in blockchain_service.py: {os.getenv('INFURA_PRIVATE_KEY')[:6]}...{os.getenv('INFURA_PRIVATE_KEY')[-4:]}")
+
+# # Ensure Solidity version is installed
+# install_solc("0.8.0")
+
+# # Connect to Infura
+# web3 = Web3(Web3.HTTPProvider(INFURA_URL))
+
+# if web3.is_connected():
+#     print("✅ Connected to Ethereum Sepolia Testnet via Infura",INFURA_URL)
+# else:
+#     raise Exception("❌ Connection to Ethereum network failed")
+
+# # Initialize UserModel and AuthService
+# user_model = UserModel(db)
+# auth_service = AuthService()
+
+# def deploy_ai_generated_contract(solidity_code, email):
+#     """
+#     Deploy an AI-generated Solidity contract to Ethereum using the user's wallet address.
+
+#     :param solidity_code: The Solidity contract code as a string.
+#     :param email: The email of the user deploying the contract.
+#     :return: Dictionary containing contract address, transaction hash, and ABI.
+#     """
+#     try:
+#         # Get the user's wallet address using AuthService
+#         user_wallet_response = auth_service.get_wallet_address(email)
+
+#         if not user_wallet_response['success']:
+#             return {"error": "User wallet address not found or not set."}
+
+#         wallet_address = user_wallet_response['walletAddress']
+
+#         # Fetch the private key associated with the user's wallet
+#         private_key = os.getenv("INFURA_PRIVATE_KEY")
+#         print(f"🔍 Loaded Private Key: {private_key[:6]}...{private_key[-4:]}")
+#         # You might need a different approach if using dynamic keys
+
+#         if not private_key:
+#             return {"error": "Private key not found in environment variables."}
+
+#         # Compile Solidity Code
+#         compiled_sol = compile_source(solidity_code, solc_version="0.8.0")
+
+#         # Extract contract interface (ABI & Bytecode)
+#         contract_id, contract_interface = compiled_sol.popitem()
+#         abi = contract_interface["abi"]
+#         bytecode = contract_interface["bin"]
+
+#         # Create contract object
+#         contract = web3.eth.contract(abi=abi, bytecode=bytecode)
+
+#         # Build transaction
+#         txn = contract.constructor().build_transaction({
+#             "from": wallet_address,
+#             "nonce": web3.eth.get_transaction_count(wallet_address),
+#             "gasPrice": web3.eth.gas_price,
+#             "gas": 3000000,  # Setting an appropriate gas limit
+#         })
+
+#         # Signing transaction
+#         signed_txn = web3.eth.account.sign_transaction(txn, private_key)
+
+#         # Sending transaction
+#         tx_hash = web3.eth.send_raw_transaction(signed_txn.rawTransaction)
+
+#         print(f"✅ Transaction sent! Waiting for confirmation... TX Hash: {tx_hash.hex()}")
+
+#         # Waiting for transaction receipt
+#         receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+
+#         print(f"✅ Contract successfully deployed at: {receipt.contractAddress}")
+
+#         return {
+#             "contract_address": receipt.contractAddress,
+#             "transaction_hash": tx_hash.hex(),
+#             "abi": abi
+#         }
+
+#     except Exception as e:
+#         print(f"❌ Error deploying contract: {e}")
+#         return {"error": str(e)}
+
+# above code is for different wallet but below code is for deploymrnt through infura and a succcesful code
+
+# import os
+# import json
+# from web3 import Web3
+# from solcx import compile_files, install_solc
+# from dotenv import load_dotenv
+
+# # Load environment variables
+# load_dotenv()
+
+# INFURA_URL = os.getenv("INFURA_URL")
+# INFURA_PRIVATE_KEY = os.getenv("INFURA_PRIVATE_KEY")
+
+# install_solc("0.8.9")  # Ensure correct Solidity version
+
+# web3 = Web3(Web3.HTTPProvider(INFURA_URL))
+
+# if web3.is_connected():
+#     print("✅ Connected to Ethereum Sepolia Testnet via Infura")
+# else:
+#     raise Exception("❌ Connection to Ethereum network failed")
+
+
+# def deploy_ai_generated_contract(solidity_code, email):
+#     try:
+#         wallet_address = "0x09E172C289f2DDe8363D43db4cF92776e81A8f64"
+#         private_key = os.getenv("INFURA_PRIVATE_KEY")
+
+#         if not private_key:
+#             return {"error": "Private key not found in environment variables."}
+
+#         # **Overwrite MyToken.sol with Generated Solidity Code**
+#         contract_path = os.path.abspath("./@openzeppelin/contracts/MyToken.sol")
+#         with open(contract_path, "w") as f:
+#             f.write(solidity_code)
+
+#         print(f"📂 Solidity file overwritten at: {contract_path}")
+
+#         # **Compile the Updated MyToken.sol**
+#         compiled_sol = compile_files([contract_path], output_values=["bin", "abi"], solc_version="0.8.9")
+
+#         # Extract compiled contract details
+#         contract_key = list(compiled_sol.keys())[0]  # Get first contract compiled
+#         contract_interface = compiled_sol[contract_key]
+#         abi = contract_interface["abi"]
+#         bytecode = contract_interface["bin"]
+
+#         if not bytecode:
+#             raise Exception("❌ Error: Compiled bytecode is empty!")
+
+#         contract = web3.eth.contract(abi=abi, bytecode=bytecode)
+
+#         txn = contract.constructor().build_transaction({
+#             "from": wallet_address,
+#             "nonce": web3.eth.get_transaction_count(wallet_address),
+#             "gasPrice": web3.eth.gas_price,
+#             "gas": 3500000,
+#         })
+
+#         signed_txn = web3.eth.account.sign_transaction(txn, private_key)
+#         tx_hash = web3.eth.send_raw_transaction(signed_txn.raw_transaction)
+
+#         print(f"✅ Transaction sent! Waiting for confirmation... TX Hash: {tx_hash.hex()}")
+
+#         receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+#         print(f"✅ Contract successfully deployed at: {receipt.contractAddress}")
+
+#         return {
+#             "contract_address": receipt.contractAddress,
+#             "transaction_hash": tx_hash.hex(),
+#             "abi": abi
+#         }
+
+#     except Exception as e:
+#         print(f"❌ Error deploying contract: {e}")
+#         return {"error": str(e)}
+
 import os
 import json
 import requests
@@ -7,12 +184,9 @@ import re
 import traceback
 import subprocess
 from web3 import Web3
-import importlib.metadata  # for reading package versions
-from middlewares.custom_poa_middleware import GethPOAMiddleware
 from solcx import compile_files, install_solc
 from dotenv import load_dotenv
 from eth_abi import encode
-
 
 # Load environment variables
 load_dotenv()
@@ -24,25 +198,7 @@ CHAIN_ID = os.getenv("CHAIN_ID", "5")  # Default to Goerli
 
 install_solc("0.8.20")  # Ensure correct Solidity version
 
-try:
-    web3_version = importlib.metadata.version("web3")
-    print("Web3 version detected:", web3_version)
-except importlib.metadata.PackageNotFoundError:
-    print("Warning: Could not detect installed web3 package version.")
-    web3_version = "unknown"
-
 web3 = Web3(Web3.HTTPProvider(INFURA_URL))
-
-# web3.middleware_onion.inject(geth_poa_middleware, layer=0)
-try:
-    web3.middleware_onion.inject(
-        lambda w3: GethPOAMiddleware(w3),  # <-- 1) The callable
-        "poa",                             # <-- 2) The optional name
-        0                                  # <-- 3) The optional position
-    )
-    print("POA middleware injected successfully.")
-except Exception as e:
-    print("Warning: geth_poa_middleware could not be injected:", e)
 
 if web3.is_connected():
     print("✅ Connected to Ethereum Sepolia Testnet via Infura")
@@ -196,7 +352,11 @@ def encode_constructor_args( token_name, token_symbol, total_supply):
 # ✅ **DEPLOY CONTRACT FUNCTION WITH IMPROVEMENTS**
 def deploy_contract(solidity_code, token_name, token_symbol, total_supply, wallet_address):
     try:
-        wallet_address = Web3.to_checksum_address(wallet_address)
+        wallet_address = "0xd6911844c087145dbD28bD534F6e67333F5DE81b"
+        private_key = os.getenv("INFURA_PRIVATE_KEY")
+
+        if not private_key:
+            return {"error": "Private key not found in environment variables."}
 
         # ✅ **Step 1: Remove old flattened contract files before deployment**
         contracts_dir = "./@openzeppelin/contracts/"
@@ -272,9 +432,6 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
         contract_interface = compiled_sol[contract_key]
         abi = contract_interface["abi"]
         bytecode = contract_interface["bin"]
-        if isinstance(bytecode, bytes):
-         bytecode = bytecode.hex()
-
 
         # ✅ Extract Constructor Arguments & Encode them
         # ✅ Extract Constructor Arguments from Payload (not Solidity)
@@ -293,7 +450,7 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
 
 
         # ✅ Append constructor arguments to the bytecode
-        # bytecode += encoded_args
+        bytecode += encoded_args
 
         if not bytecode or len(bytecode) < 10:
             print("❌ Compiled bytecode is empty! Available contracts:", contract_keys)
@@ -307,34 +464,56 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
         print(f"🔍 ABI Sent for Deployment: {json.dumps(abi, indent=2)[:500]}...")
         print(f"🔍 Bytecode Sent for Deployment: {bytecode[:100]}...")
 
-           # or from web3 import Web3
         contract = web3.eth.contract(abi=abi, bytecode=bytecode)
-        built_txn = contract.constructor(token_name, token_symbol, int(total_supply)).build_transaction({
-            # We do NOT specify 'from', 'nonce', or 'chainId' 
-            # Let MetaMask fill those in
-            "gas": 1500000  # or you can omit gas and let metamask estimate
+        gas_price = web3.eth.gas_price
+        safe_gas_price = min(gas_price, web3.to_wei(50, 'gwei'))
+
+        txn = contract.constructor(token_name, token_symbol, int(total_supply)).build_transaction({
+            "from": wallet_address,
+            "nonce": web3.eth.get_transaction_count(wallet_address),
+            "gasPrice": safe_gas_price, 
+            "gas": 1500000,
         })
 
-        # The only fields MetaMask really needs are `data` (and optionally `gas`)
-        unsigned_tx = {
-            "data": built_txn["data"],
-            "gas": built_txn["gas"]  # or rename to `gasLimit` in your frontend
-        }
+        signed_txn = web3.eth.account.sign_transaction(txn, private_key)
+        tx_hash = web3.eth.send_raw_transaction(signed_txn.raw_transaction)
+
+        print(f"✅ Transaction sent! Waiting for confirmation... TX Hash: {tx_hash.hex()}")
+
+        receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+        print(f"✅ Contract successfully deployed at: {receipt.contractAddress}")
+
+        # **Step 7: Verify the Contract**
+        verification_status = verify_contract(receipt.contractAddress, flattened_contract_path, bytecode )
 
         return {
-            "unsigned_tx": unsigned_tx,
-            "abi": abi,
+            "contract_address": receipt.contractAddress,
+            "transaction_hash": tx_hash.hex(),
             "bytecode": bytecode,
-            "flattened_contract_path": flattened_contract_path,
-            "token_name": token_name,
-            "token_symbol": token_symbol,
-            "total_supply": total_supply
+            "abi": abi,
+            "verification_status": verification_status
         }
 
     except Exception as e:
+        print("❌ Deployment failed!")
         traceback.print_exc()
         return {"error": str(e)}
-  
+
+def broadcast_signed_tx(signed_tx):
+    try:
+        tx_hash = web3.eth.send_raw_transaction(signed_tx)
+        receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+
+        print(f"✅ Transaction Broadcasted! TX Hash: {tx_hash.hex()}")
+        
+        return {"transaction_hash": tx_hash.hex(), "contract_address": receipt.contractAddress}
+
+    except Exception as e:
+        print("❌ Error broadcasting transaction!")
+        traceback.print_exc()
+        return {"error": str(e)}
+
+
 
 # ✅ **VERIFY CONTRACT WITH FLATTENED CODE**
 def verify_contract(contract_address, flattened_contract_path, deployment_bytecode, token_name, token_symbol, total_supply):
@@ -347,6 +526,12 @@ def verify_contract(contract_address, flattened_contract_path, deployment_byteco
 
         with open(flattened_contract_path, "r") as f:
             flattened_code = f.read()
+
+        # **Step 2: Ensure `Ownable(msg.sender)` Fix is Applied**
+        # if "Ownable(" in flattened_code and "Ownable(msg.sender)" not in flattened_code:
+        #     flattened_code = flattened_code.replace("Ownable(", "Ownable(msg.sender, ") 
+        #     with open(flattened_contract_path, "w") as f:
+        #         f.write(flattened_code)
 
         # **Step 3: Extract Contract Name**
         contract_name = extract_contract_name(flattened_code)
@@ -372,9 +557,7 @@ def verify_contract(contract_address, flattened_contract_path, deployment_byteco
             [flattened_contract_path], 
             output_values=["bin", "abi"], 
             solc_version="0.8.20", 
-            evm_version="paris",
-            optimize=True,  # Ensure optimization is enabled
-            optimize_runs=200
+            evm_version="paris"
         )
 
         # **Step 6: Extract Bytecode and ABI for Debugging**

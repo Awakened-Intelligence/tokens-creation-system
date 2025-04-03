@@ -14,6 +14,8 @@
 import os
 from web3 import Web3
 from dotenv import load_dotenv
+from datetime import timedelta
+
 
 load_dotenv()
 
@@ -28,6 +30,8 @@ class Config:
     INFURA_URL=os.getenv("INFURA_URL")
     INFURA_PRIVATE_KEY=os.getenv("INFURA_PRIVATE_KEY")
     WALLET_ADDRESS=os.getenv("WALLET_ADDRESS")
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # Token expires after 2 hours
+
 
 
  # Web3 Instance

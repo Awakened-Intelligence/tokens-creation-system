@@ -1,16 +1,4 @@
-# from openai import OpenAI
 
-# API_KEY = "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"
-
-# client = OpenAI(api_key=API_KEY)
-
-# try:
-#     models = client.models.list()
-#     print(" Available Models:")
-#     for model in models.data:
-#         print("-", model.id)
-# except Exception as e:
-#     print(" Error:", e)
 import requests
 from config import Config
 

@@ -21,7 +21,7 @@ load_dotenv()
 
 class Config:
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-    API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:5000")
+    API_BASE_URL = os.getenv("API_BASE_URL", "https://token.hub.fullpotential.com")
    #  FRONTEND_URL = os.getenv("FRONTEND_URL","http://localhost:3000")
     FRONTEND_URL = os.getenv("FRONTEND_URL", "https://main.d201un3f52wjey.amplifyapp.com/")
     MONGO_URI = os.getenv("MONGO_URI")

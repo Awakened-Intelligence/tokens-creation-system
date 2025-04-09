@@ -30,3 +30,6 @@ args = "cd backend && python server.py"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd frontend && npm start"
+
+[deployment]
+deploymentTarget = "cloudrun"

@@ -18,10 +18,10 @@ import bgImage from './assets/coin.png';
 function App() {
   return (
     <div
-    className="min-h-screen bg-cover bg-center bg-fixed"
+    className="min-h-screen"
     style={{ 
-      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${bgImage})`,
-      backgroundColor: '#0f172a'
+      background: 'linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #0277bd 100%)',
+      backgroundAttachment: 'fixed'
     }}
   >
     <Router>

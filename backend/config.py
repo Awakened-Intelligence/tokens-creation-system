@@ -20,7 +20,7 @@ from datetime import timedelta
 load_dotenv()
 
 class Config:
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     API_BASE_URL = os.getenv("API_BASE_URL", "https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev:5000")
     FRONTEND_URL = os.getenv("FRONTEND_URL","https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev")
     # FRONTEND_URL = os.getenv("FRONTEND_URL", "https://main.d201un3f52wjey.amplifyapp.com")

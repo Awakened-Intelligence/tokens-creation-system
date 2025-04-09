@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask
 import os
 from flask_cors import CORS
 from database.db import db  # Correct import
@@ -30,12 +30,9 @@ def test_db():
         return {"message": "MongoDB Connected Successfully!"}, 200
     except Exception as e:
         return {"error": str(e)}, 500
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(os.path.join('static', path)):
-        return send_from_directory('static', path)
-    return send_from_directory('static', 'index.html')
+@app.route('/')
+def home():
+    return "Hello, this is the root route!"
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

@@ -93,19 +93,19 @@ function Dashboard() {
     } else {
       document.body.style.overflow = "auto";
     }
-  
+
     return () => {
       document.body.style.overflow = "auto"; // Cleanup on unmount
     };
   }, [showModal]);
-  
+
 
   return (
     <>
     <Navbar />
     <div className="flex flex-col items-center mt-20 px-4">
 
-  
+
     <h2 className="text-3xl mt-20 font-bold text-center text-black">Token Dashboard</h2>
     <div className="max-w-5xl mx-auto p-6 bg-white shadow-2xl rounded-lg flex flex-col items-center mt-20 border-2 border-black">
     {/* Wallet Connection Section */}

@@ -1,8 +1,18 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {  FiMenu } from "react-icons/fi";
-import "../styles/style.css"
+import { FiMenu, FiX } from "react-icons/fi";
+import "../styles/style.css";
+
+const NavLink = ({ to, children }) => (
+  <Link 
+    to={to} 
+    className="relative px-4 py-2 group text-gray-300 hover:text-white transition-colors"
+  >
+    <span className="relative z-10">{children}</span>
+    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+  </Link>
+);
 // import Typed from 'react-typed';
 
 function Navbar() {

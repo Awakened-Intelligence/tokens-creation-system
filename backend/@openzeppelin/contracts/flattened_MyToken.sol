@@ -708,15 +708,12 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
 
 
 
-contract YOUTONG is ERC20, Ownable {
+contract Tokengen is ERC20, Ownable {
     uint256 private _burnRate;
     bool private _stakingEnabled;
     bool private _mintingEnabled;
 
-    constructor(string memory _name, string memory _symbol, uint256 _initialSupply)
-        ERC20(_name, _symbol)
-        Ownable(msg.sender)
-    {
+    constructor(string memory _name, string memory _symbol, uint256 _initialSupply) ERC20(_name, _symbol) Ownable(msg.sender) {
         _mint(msg.sender, _initialSupply * 10 ** decimals());
         _burnRate = 200; // 2.0%
         _stakingEnabled = true;
@@ -728,45 +725,32 @@ contract YOUTONG is ERC20, Ownable {
         address to,
         uint256 amount
     ) internal virtual override {
-        super._update(from, to, amount);
-
-        if (_burnRate > 0 && from != address(0) && to != address(0)) {
-            uint256 burnAmount = amount * _burnRate / 10000;
-            _burn(from, burnAmount);
+        if (_burnRate > 0 && to == address(0)) {
+            uint256 burnAmount = (amount * _burnRate) / 10000;
+            super._burn(from, burnAmount);
         }
     }
 
-    function burn(uint256 amount) public {
-        require(_burnRate > 0, "Burning is disabled");
+    function stake(uint256 amount) external {
+        require(_stakingEnabled, "Staking is disabled");
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+
         _burn(msg.sender, amount);
     }
 
-    function setBurnRate(uint256 burnRate) public onlyOwner {
-        _burnRate = burnRate;
-    }
-
-    function stake(uint256 amount) public {
-        require(_stakingEnabled, "Staking is disabled");
-        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
-        _transfer(msg.sender, address(this), amount);
-    }
-
-    function unstake(uint256 amount) public {
+    function unstake(uint256 amount) external {
         require(_stakingEnabled, "Staking is disabled");
         require(balanceOf(address(this)) >= amount, "Insufficient contract balance");
-        _transfer(address(this), msg.sender, amount);
+
+        _mint(msg.sender, amount);
     }
 
-    function setStakingEnabled(bool enabled) public onlyOwner {
-        _stakingEnabled = enabled;
-    }
-
-    function mint(address to, uint256 amount) public onlyOwner {
+    function mint(address to, uint256 amount) external onlyOwner {
         require(_mintingEnabled, "Minting is disabled");
         _mint(to, amount);
     }
 
-    function setMintingEnabled(bool enabled) public onlyOwner {
-        _mintingEnabled = enabled;
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
     }
 }

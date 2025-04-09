@@ -5,7 +5,7 @@ import Navbar from "../components/navbar";
 
 function Home() {
   return (
-    <div className="page-container"> {/* Added background gradient */}
+    <div className="bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 min-h-screen"> {/* Added background gradient */}
       <Navbar />
 
       {/* Hero Section */}

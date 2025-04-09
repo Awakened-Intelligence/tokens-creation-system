@@ -103,8 +103,7 @@ function Dashboard() {
   return (
     <>
     <Navbar />
-    <div className="page-container">
-  <div className="content-container mt-20">
+    <div className="flex flex-col items-center mt-20 px-4">
 
   
     <h2 className="text-3xl mt-20 font-bold text-center text-black">Token Dashboard</h2>

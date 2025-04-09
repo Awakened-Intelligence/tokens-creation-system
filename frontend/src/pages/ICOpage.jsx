@@ -5,8 +5,7 @@ const ICOPage = () => {
   return (
     <div >
         <Navbar />
-    <div className="page-container">
-  <div className="content-container flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
     
       <h1 className="text-3xl font-bold mb-4">Participate in Our Token Sale</h1>
       <p className="text-lg mb-6">Buy tokens directly from our ICO/IDO launch.</p>

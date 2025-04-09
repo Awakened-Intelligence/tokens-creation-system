@@ -250,7 +250,8 @@ toast.success(" Smart contract generated successfully!");
   <Navbar />
   <ToastContainer position="top-right" autoClose={3000} />
   {/* Hero Section */}
-  <div className="flex flex-col items-center mt-20 px-4">
+  <div className="page-container">
+  <div className="content-container mt-20">
 
 
     {/* Token Input Fields */}

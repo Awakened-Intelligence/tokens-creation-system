@@ -1,18 +1,8 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FiMenu, FiX } from "react-icons/fi";
-import "../styles/style.css";
-
-const NavLink = ({ to, children }) => (
-  <Link 
-    to={to} 
-    className="relative px-4 py-2 group text-gray-300 hover:text-white transition-colors"
-  >
-    <span className="relative z-10">{children}</span>
-    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-  </Link>
-);
+import {  FiMenu } from "react-icons/fi";
+import "../styles/style.css"
 // import Typed from 'react-typed';
 
 function Navbar() {
@@ -30,13 +20,13 @@ function Navbar() {
       const expTime = decoded.exp * 1000; // Convert to milliseconds
       const now = Date.now();
       const timeLeft = expTime - now;
-  
+
       if (timeLeft <= 0) return "⛔ Token has expired";
-  
+
       const seconds = Math.floor((timeLeft / 1000) % 60);
       const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
       const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-  
+
       return `${hours}h ${minutes}m ${seconds}s left`;
     } catch (error) {
       return "⚠️ Invalid token";
@@ -50,7 +40,7 @@ function Navbar() {
       console.log("⏳ Token expiry time left:", timeLeft);
     }
   }, []);
-  
+
 
   const isTokenExpired = (token) => {
     try {
@@ -73,19 +63,19 @@ function Navbar() {
     } else {
       setIsAuthenticated(!!token); // still valid
     }
-  
+
     loadWallet();
-  
+
     // Wallet events
     window.addEventListener("walletConnected", loadWallet);
     window.addEventListener("walletDisconnected", clearWallet);
-  
+
     return () => {
       window.removeEventListener("walletConnected", loadWallet);
       window.removeEventListener("walletDisconnected", clearWallet);
     };
   }, []);
-    
+
 
   const loadWallet = () => {
     const savedWallet = localStorage.getItem("walletAddress");
@@ -134,11 +124,12 @@ function Navbar() {
     localStorage.removeItem("user_id");
     setIsAuthenticated(false);
     disconnectWallet();
-    navigate("/");
+    navigate("/signin"); // ✅ Redirect to sign-in page after logout
   };
+
   return (
     <>
-    
+
      <nav className="w-full p-4  justify-between items-center fixed top-0 left-0 z-50 lg:flex hidden rounded-xl bg-gradient-to-r from-white via-blue-200 to-white">
 
 {/* Logo Section */}
@@ -205,7 +196,7 @@ function Navbar() {
   {!isAuthenticated ? (
     <Link
       to="/signin"
-   
+
     >
 <button className="btn" style={{backgroundColor:"#4169e1"}}>
       Sign In
@@ -215,7 +206,7 @@ function Navbar() {
     <Link
       to="#"
       onClick={handleLogout}
-      
+
     >
       <button className="btn" style={{backgroundColor:"#4169e1"}}>
       Logout

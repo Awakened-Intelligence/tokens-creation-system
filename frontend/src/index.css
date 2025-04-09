@@ -2,53 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary: #2563eb;
-  --primary-dark: #1e40af;
-  --secondary: #4f46e5;
-  --accent: #3b82f6;
-  --background: #0f172a;
-  --surface: #1e293b;
-  --text: #f8fafc;
-}
-
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background);
-  color: var(--text);
 }
 
-.glass-effect {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
-.btn {
-  @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300;
-  background: linear-gradient(45deg, var(--primary), var(--secondary));
-  color: white;
-  border: none;
-  position: relative;
-  overflow: hidden;
-}
 
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
 
-input, select {
-  @apply bg-surface border-0 rounded-lg p-4 text-text focus:ring-2 focus:ring-accent focus:outline-none transition-all duration-300;
-}
 
-.card {
-  @apply glass-effect p-6 transition-all duration-300 hover:transform hover:scale-[1.02];
-}
 
 /* From Uiverse.io by Admin12121 */ 
 .loader {
@@ -76,7 +46,7 @@ input, select {
   position: absolute;
   right: 32%;
   bottom: -11px;
-  /* change the back groung color on switching from light to dark mood */
+/* change the back groung color on switching from light to dark mood */
   /* background: #e8e8e8; */
   transform: translateZ(200px) rotate(var(--r));
   -webkit-animation: mask var(--duration) linear forwards infinite;
@@ -835,3 +805,9 @@ input, select {
     opacity: 1;
   }
 }
+
+
+
+
+
+

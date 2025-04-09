@@ -4,16 +4,18 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Tokengen is ERC20, Ownable {
-    uint256 private _burnRate;
-    bool private _stakingEnabled;
-    bool private _mintingEnabled;
+contract hubura is ERC20, Ownable {
+    uint256 public constant burnRate = 200; // 2.0% burn rate
+    uint256 private constant burnRateBase = 10000;
 
-    constructor(string memory _name, string memory _symbol, uint256 _initialSupply) ERC20(_name, _symbol) Ownable(msg.sender) {
-        _mint(msg.sender, _initialSupply * 10 ** decimals());
-        _burnRate = 200; // 2.0%
-        _stakingEnabled = true;
-        _mintingEnabled = true;
+    mapping(address => uint256) public stakedBalances;
+
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        uint256 _initialSupply
+    ) ERC20(_name, _symbol) Ownable(msg.sender) {
+        _mint(msg.sender, _initialSupply * 10**decimals());
     }
 
     function _update(
@@ -21,32 +23,38 @@ contract Tokengen is ERC20, Ownable {
         address to,
         uint256 amount
     ) internal virtual override {
-        if (_burnRate > 0 && to == address(0)) {
-            uint256 burnAmount = (amount * _burnRate) / 10000;
-            super._burn(from, burnAmount);
+        if (from != address(0) && to != address(0) && amount > 0) {
+            uint256 burnAmount = (amount * burnRate) / burnRateBase;
+            _burn(from, burnAmount);
+            super._update(from, to, amount - burnAmount);
+        } else {
+            super._update(from, to, amount);
         }
     }
 
-    function stake(uint256 amount) external {
-        require(_stakingEnabled, "Staking is disabled");
-        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+    function stake(uint256 _amount) public {
+        require(_amount > 0, "Stake amount must be greater than 0");
+        require(
+            balanceOf(msg.sender) >= _amount,
+            "Insufficient balance to stake"
+        );
 
-        _burn(msg.sender, amount);
+        _transfer(msg.sender, address(this), _amount);
+        stakedBalances[msg.sender] += _amount;
     }
 
-    function unstake(uint256 amount) external {
-        require(_stakingEnabled, "Staking is disabled");
-        require(balanceOf(address(this)) >= amount, "Insufficient contract balance");
+    function unstake(uint256 _amount) public {
+        require(_amount > 0, "Unstake amount must be greater than 0");
+        require(
+            stakedBalances[msg.sender] >= _amount,
+            "Insufficient staked balance"
+        );
 
-        _mint(msg.sender, amount);
+        stakedBalances[msg.sender] -= _amount;
+        _transfer(address(this), msg.sender, _amount);
     }
 
-    function mint(address to, uint256 amount) external onlyOwner {
-        require(_mintingEnabled, "Minting is disabled");
-        _mint(to, amount);
-    }
-
-    function burn(uint256 amount) external {
-        _burn(msg.sender, amount);
+    function mint(address _to, uint256 _amount) public onlyOwner {
+        _mint(_to, _amount);
     }
 }

@@ -1,4 +1,5 @@
-﻿from flask import Flask
+from flask import Flask
+import os
 from flask_cors import CORS
 from database.db import db  # Correct import
 from flask_jwt_extended import JWTManager
@@ -29,6 +30,10 @@ def test_db():
         return {"message": "MongoDB Connected Successfully!"}, 200
     except Exception as e:
         return {"error": str(e)}, 500
-
+@app.route('/')
+def home():
+    return "Hello, this is the root route!"
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
+

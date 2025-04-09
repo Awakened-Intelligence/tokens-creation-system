@@ -146,11 +146,11 @@ function Dashboard() {
     </div>
 
     {/* Token Stats & Live Data (Future Feature) */}
-    <div className="mt-8 text-center">
+    {/* <div className="mt-8 text-center">
       <p className="text-gray-500">
         📊 Token price, staking, and transaction stats will be added soon.
       </p>
-    </div>
+    </div> */}
       {/* Token Info Modal */}
       {showModal && selectedToken && (
   <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center">

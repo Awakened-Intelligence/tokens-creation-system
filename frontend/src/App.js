@@ -1,7 +1,7 @@
 
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Home from "./pages/homepage"; // Import Home Page
+import Home from "./pages/homepage";
 import { TokenProvider } from "./context/TokenContext"; 
 import Createtoken from "./pages/create-token";
 import Dashboard from "./pages/dashboard";
@@ -17,12 +17,12 @@ import bgImage from './assets/coin.png';
 
 function App() {
   return (
-    <div className="flex min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+    <div className="flex min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: '100% 100%' }}>
       <Router>
-        <div className="fixed top-0 left-0 h-full w-64">
-          <div className="h-full w-full rounded-xl bg-gradient-to-r from-white via-blue-200 to-white p-4">
+        <div className="hidden lg:block">
+          <div className="fixed top-0 left-0 h-full w-64 bg-gradient-to-r from-white via-blue-200 to-white p-4">
             <div className="flex flex-col space-y-4">
-              <h1 className="text-2xl font-bold text-black mb-8">AI Token Generation</h1>
+              <h1 className="text-2xl font-bold text-black mb-8 typewriter">AI Token Generation</h1>
               <Link to="/" className="text-black hover:text-blue-600 font-semibold">Home</Link>
               <Link to="/create-token" className="text-black hover:text-blue-600 font-semibold">Create Token</Link>
               <Link to="/dashboard" className="text-black hover:text-blue-600 font-semibold">Dashboard</Link>
@@ -42,7 +42,7 @@ function App() {
             <Route path="/create-token" element={<ProtectedRoute><TokenProvider><Createtoken /></TokenProvider></ProtectedRoute>} /> 
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/ICO-Page" element={<ProtectedRoute><ICOPage /></ProtectedRoute>} /> 
-            <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} /> 
+            <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} />
           </Routes>
         </div>
       </Router>

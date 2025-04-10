@@ -17,13 +17,24 @@ import bgImage from './assets/coin.png';
 
 function App() {
   return (
-    <div
-    className="min-h-screen bg-cover bg-center lg:flex"
-    style={{ backgroundImage: `url(${bgImage})` }}
-  >
-    <div className="relative z-10 lg:ml-64">
+    <div className="flex min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
       <Router>
-        <Routes>
+        <div className="hidden lg:block">
+          <div className="fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-black via-blue-900 to-black shadow-xl">
+            <div className="p-4">
+              <h1 className="text-2xl font-bold text-white mb-8">AI Token Generation</h1>
+              <nav className="flex flex-col space-y-4">
+                <Link to="/" className="text-white hover:text-blue-400 font-semibold py-2">Home</Link>
+                <Link to="/create-token" className="text-white hover:text-blue-400 font-semibold py-2">Create Token</Link>
+                <Link to="/dashboard" className="text-white hover:text-blue-400 font-semibold py-2">Dashboard</Link>
+                <Link to="/ICO-Page" className="text-white hover:text-blue-400 font-semibold py-2">Join ICO/IDO</Link>
+                <Link to="/connect-wallet" className="text-white hover:text-blue-400 font-semibold py-2">Connect Wallet</Link>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div className="flex-1 lg:ml-64">
+          <Routes>
           <Route path="/" element={<Home />} /> 
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
@@ -35,8 +46,8 @@ function App() {
           <Route path="/ICO-Page" element={<ProtectedRoute><ICOPage /></ProtectedRoute>} /> 
           <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} /> 
         </Routes>
+        </div>
       </Router>
-    </div>
     </div>
   );
 }

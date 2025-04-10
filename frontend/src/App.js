@@ -17,18 +17,16 @@ import bgImage from './assets/coin.png';
 
 function App() {
   return (
-    <div className="flex min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: '100% 100%' }}>
-      <Router>
-        <div className="hidden lg:block">
-          <div className="fixed top-0 left-0 h-full w-64 bg-gradient-to-r from-white via-blue-200 to-white p-4">
-            <div className="flex flex-col space-y-4">
-              <h1 className="text-2xl font-bold text-black mb-8 typewriter">AI Token Generation</h1>
-              <Link to="/" className="text-black hover:text-blue-600 font-semibold">Home</Link>
-              <Link to="/create-token" className="text-black hover:text-blue-600 font-semibold">Create Token</Link>
-              <Link to="/dashboard" className="text-black hover:text-blue-600 font-semibold">Dashboard</Link>
-              <Link to="/ICO-Page" className="text-black hover:text-blue-600 font-semibold">Join ICO/IDO</Link>
-              <Link to="/connect-wallet" className="text-black hover:text-blue-600 font-semibold">Connect Wallet</Link>
-            </div>
+    <Router>
+      <div className="flex min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: '100% 100%' }}>
+        <div className="fixed top-0 left-0 h-full w-64 bg-gradient-to-r from-white via-blue-200 to-white p-4">
+          <div className="flex flex-col space-y-4">
+            <h1 className="text-2xl font-bold text-black mb-8 typewriter">AI Token Generation</h1>
+            <Link to="/" className="text-black hover:text-blue-600 font-semibold">Home</Link>
+            <Link to="/create-token" className="text-black hover:text-blue-600 font-semibold">Create Token</Link>
+            <Link to="/dashboard" className="text-black hover:text-blue-600 font-semibold">Dashboard</Link>
+            <Link to="/ICO-Page" className="text-black hover:text-blue-600 font-semibold">Join ICO/IDO</Link>
+            <Link to="/connect-wallet" className="text-black hover:text-blue-600 font-semibold">Connect Wallet</Link>
           </div>
         </div>
         <div className="flex-1 ml-64">
@@ -45,8 +43,8 @@ function App() {
             <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} />
           </Routes>
         </div>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 }
 

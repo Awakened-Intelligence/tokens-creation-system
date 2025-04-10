@@ -9,7 +9,8 @@ function Home() {
         <Navbar />
 
       {/* Hero Section */}
-      <div className="home-page flex flex-col items-center mt-20">
+      <div className="home-page flex flex-col items-center mt-32">
+      <h1 className="text-3xl font-bold text-black mb-8">AI Token Generation</h1>
       <h2 className="text-4xl sm:text-1xl md:text-4xl font-bold text-black mt-8 text-center typewriter-effect max-w-full w-auto">
   Effortlessly Create & Deploy Your Token
 </h2>

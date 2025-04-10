@@ -17,12 +17,11 @@ import bgImage from './assets/coin.png';
 
 function App() {
   return (
-    <div className="flex min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+    <div className="flex min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: '100% 100%' }}>
       <Router>
         <div className="hidden lg:block">
-          <div className="fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-black via-blue-900 to-black shadow-xl">
-            <div className="p-4">
-              <h1 className="text-2xl font-bold text-white mb-8">AI Token Generation</h1>
+          <div className="fixed top-0 left-0 h-full w-64 bg-black shadow-xl">
+            <div className="p-4 mt-16">
               <nav className="flex flex-col space-y-4">
                 <Link to="/" className="text-white hover:text-blue-400 font-semibold py-2">Home</Link>
                 <Link to="/create-token" className="text-white hover:text-blue-400 font-semibold py-2">Create Token</Link>

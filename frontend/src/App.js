@@ -18,24 +18,10 @@ import bgImage from './assets/coin.png';
 function App() {
   return (
     <div
-    className="min-h-screen relative overflow-hidden"
-    style={{ 
-      background: 'radial-gradient(circle at 50% -20%, #2C3E50, #000428)',
-      backgroundAttachment: 'fixed'
-    }}
+    className="min-h-screen bg-cover bg-center"
+    style={{ backgroundImage: `url(${bgImage})` }}
   >
-    <div className="absolute inset-0" style={{
-      background: 'linear-gradient(45deg, rgba(76, 0, 255, 0.15) 0%, rgba(0, 255, 255, 0.15) 100%)',
-      filter: 'blur(150px)',
-      transform: 'translate3d(0, 0, 0)',
-      pointerEvents: 'none'
-    }}></div>
-    <div className="absolute inset-0" style={{
-      background: 'radial-gradient(circle at 30% 50%, rgba(255, 59, 0, 0.1), transparent 25%), radial-gradient(circle at 70% 50%, rgba(0, 255, 255, 0.1), transparent 25%)',
-      pointerEvents: 'none'
-    }}></div>
-    <div className="relative z-10">
-      <Router>
+    <Router>
       <Routes>
         <Route path="/" element={<Home />} /> 
         <Route path="/signin" element={<SignInPage />} />
@@ -49,7 +35,6 @@ function App() {
         <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} /> 
       </Routes>
     </Router>
-    </div>
     </div>
   );
 }

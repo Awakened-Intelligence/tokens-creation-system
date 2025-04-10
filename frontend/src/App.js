@@ -1,5 +1,6 @@
+
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Home from "./pages/homepage"; // Import Home Page
 import { TokenProvider } from "./context/TokenContext"; 
 import Createtoken from "./pages/create-token";
@@ -13,7 +14,6 @@ import ProtectedRoute from './components/Auth/ProtectedRoute';
 import ConnectWallet from "./pages/ConnectWallet";
 import VerificationFailed from "./pages/VerificationFailed";
 import bgImage from './assets/coin.png';
-
 
 function App() {
   return (
@@ -36,15 +36,16 @@ function App() {
             <Route path="/" element={<Home />} /> 
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/verification-failed" element={<VerificationFailed />} />
-        <Route path="/create-token" element={<ProtectedRoute><TokenProvider><Createtoken /></TokenProvider></ProtectedRoute>} /> 
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/ICO-Page" element={<ProtectedRoute><ICOPage /></ProtectedRoute>} /> 
-        <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} /> 
-      </Routes>
-    </Router>
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/verification-failed" element={<VerificationFailed />} />
+            <Route path="/create-token" element={<ProtectedRoute><TokenProvider><Createtoken /></TokenProvider></ProtectedRoute>} /> 
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/ICO-Page" element={<ProtectedRoute><ICOPage /></ProtectedRoute>} /> 
+            <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} /> 
+          </Routes>
+        </div>
+      </Router>
     </div>
   );
 }

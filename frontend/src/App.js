@@ -18,23 +18,25 @@ import bgImage from './assets/coin.png';
 function App() {
   return (
     <div
-    className="min-h-screen bg-cover bg-center"
+    className="min-h-screen bg-cover bg-center lg:flex"
     style={{ backgroundImage: `url(${bgImage})` }}
   >
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} /> 
-        <Route path="/signin" element={<SignInPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/verification-failed" element={<VerificationFailed />} />
-        <Route path="/create-token" element={<ProtectedRoute><TokenProvider><Createtoken /></TokenProvider></ProtectedRoute>} /> 
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/ICO-Page" element={<ProtectedRoute><ICOPage /></ProtectedRoute>} /> 
-        <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} /> 
-      </Routes>
-    </Router>
+    <div className="relative z-10 lg:ml-64">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} /> 
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/verification-failed" element={<VerificationFailed />} />
+          <Route path="/create-token" element={<ProtectedRoute><TokenProvider><Createtoken /></TokenProvider></ProtectedRoute>} /> 
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/ICO-Page" element={<ProtectedRoute><ICOPage /></ProtectedRoute>} /> 
+          <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} /> 
+        </Routes>
+      </Router>
+    </div>
     </div>
   );
 }

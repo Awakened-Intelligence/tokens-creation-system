@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {  FiMenu } from "react-icons/fi";
@@ -144,25 +143,25 @@ function Navbar() {
 <div className="flex items-center mt-2 px-4 bg-black text-white space-x-10 border-l-2 border-r-2 border-black rounded-2xl  py-4">
   <Link
     to="/"
-    className={`text-lg font-semibold text-white hover:text-[#4169e1] transition-all duration-300 ${location.pathname === "/" ? "border-b-2 hover:border-[#4169e1]  border-[#4169e1] text-[#4169e1]" : ""}`}
+    className={`text-lg font-semibold text-white hover:text-[#4169e1] transition-all duration-300 py-2 px-4 ${location.pathname === "/" ? "border-b-2 hover:border-[#4169e1]  border-[#4169e1] text-[#4169e1]" : ""}`}
   >
     Home
   </Link>
   <Link
     to="/create-token"
-    className={`text-lg font-semibold text-white hover:text-[#4169e1] transition-all duration-300 ${location.pathname === "/create-token" ? "border-b-2 hover:border-[#4169e1] border-[#4169e1] text-[#4169e1]"  : ""}`}
+    className={`text-lg font-semibold text-white hover:text-[#4169e1] transition-all duration-300 py-2 px-4 ${location.pathname === "/create-token" ? "border-b-2 hover:border-[#4169e1] border-[#4169e1] text-[#4169e1]"  : ""}`}
   >
     Create Token
   </Link>
   <Link
     to="/dashboard"
-    className={`text-lg font-semibold text-white hover:text-[#4169e1] transition-all duration-300 ${location.pathname === "/dashboard" ? "border-b-2 hover:border-[#4169e1] border-[#4169e1] text-[#4169e1]" : ""}`}
+    className={`text-lg font-semibold text-white hover:text-[#4169e1] transition-all duration-300 py-2 px-4 ${location.pathname === "/dashboard" ? "border-b-2 hover:border-[#4169e1] border-[#4169e1] text-[#4169e1]" : ""}`}
   >
     Dashboard
   </Link>
   <Link
     to="/ICO-Page"
-    className={`text-lg font-semibold text-white hover:text-[#4169e1] transition-all duration-300 ${location.pathname === "/ICO-Page" ? "border-b-2 hover:border-[#4169e1] border-[#4169e1] text-[#4169e1]" : ""}`}
+    className={`text-lg font-semibold text-white hover:text-[#4169e1] transition-all duration-300 py-2 px-4 ${location.pathname === "/ICO-Page" ? "border-b-2 hover:border-[#4169e1] border-[#4169e1] text-[#4169e1]" : ""}`}
   >
     Join ICO/IDO
   </Link>

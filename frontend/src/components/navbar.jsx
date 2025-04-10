@@ -130,7 +130,7 @@ function Navbar() {
   return (
     <>
 
-     <nav className="w-full p-4  justify-between items-center fixed top-0 left-0 z-50 lg:flex hidden bg-black">
+     <nav className="w-full p-4  justify-between items-center fixed top-0 left-0 z-50 lg:flex hidden rounded-xl bg-gradient-to-r from-white via-blue-200 to-white">
 
 {/* Logo Section */}
 <div className="flex items-center">

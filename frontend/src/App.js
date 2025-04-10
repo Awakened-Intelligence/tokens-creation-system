@@ -1,7 +1,7 @@
 
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Home from "./pages/homepage";
+import Home from "./pages/homepage"; // Import Home Page
 import { TokenProvider } from "./context/TokenContext"; 
 import Createtoken from "./pages/create-token";
 import Dashboard from "./pages/dashboard";
@@ -17,18 +17,18 @@ import bgImage from './assets/coin.png';
 
 function App() {
   return (
-    <Router>
-      <div className="flex min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: '100% 100%' }}>
-        <div className="fixed top-0 left-0 h-full w-64 bg-blue-600 shadow-xl">
-          <div className="p-4 mt-8">
-            <h1 className="text-2xl font-bold text-white mb-8 typewriter">AI Token Generation</h1>
-            <nav className="flex flex-col space-y-4">
-              <Link to="/" className="text-white hover:text-blue-400 font-semibold py-2">Home</Link>
-              <Link to="/create-token" className="text-white hover:text-blue-400 font-semibold py-2">Create Token</Link>
-              <Link to="/dashboard" className="text-white hover:text-blue-400 font-semibold py-2">Dashboard</Link>
-              <Link to="/ICO-Page" className="text-white hover:text-blue-400 font-semibold py-2">Join ICO/IDO</Link>
-              <Link to="/connect-wallet" className="text-white hover:text-blue-400 font-semibold py-2">Connect Wallet</Link>
-            </nav>
+    <div className="flex min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+      <Router>
+        <div className="fixed top-0 left-0 h-full w-64">
+          <div className="h-full w-full rounded-xl bg-gradient-to-r from-white via-blue-200 to-white p-4">
+            <div className="flex flex-col space-y-4">
+              <h1 className="text-2xl font-bold text-black mb-8">AI Token Generation</h1>
+              <Link to="/" className="text-black hover:text-blue-600 font-semibold">Home</Link>
+              <Link to="/create-token" className="text-black hover:text-blue-600 font-semibold">Create Token</Link>
+              <Link to="/dashboard" className="text-black hover:text-blue-600 font-semibold">Dashboard</Link>
+              <Link to="/ICO-Page" className="text-black hover:text-blue-600 font-semibold">Join ICO/IDO</Link>
+              <Link to="/connect-wallet" className="text-black hover:text-blue-600 font-semibold">Connect Wallet</Link>
+            </div>
           </div>
         </div>
         <div className="flex-1 ml-64">
@@ -42,11 +42,11 @@ function App() {
             <Route path="/create-token" element={<ProtectedRoute><TokenProvider><Createtoken /></TokenProvider></ProtectedRoute>} /> 
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/ICO-Page" element={<ProtectedRoute><ICOPage /></ProtectedRoute>} /> 
-            <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} />
+            <Route path="/connect-wallet" element={<ProtectedRoute><ConnectWallet /></ProtectedRoute>} /> 
           </Routes>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </div>
   );
 }
 

@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
+import Navbar from "../components/navbar";
 
 function Home() {
   return (
     < >
+        <Navbar />
+
       {/* Hero Section */}
       <div className="home-page flex flex-col items-center mt-20">
       <h2 className="text-4xl sm:text-1xl md:text-4xl font-bold text-black mt-8 text-center typewriter-effect max-w-full w-auto">

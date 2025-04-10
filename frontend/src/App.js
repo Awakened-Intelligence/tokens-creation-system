@@ -18,11 +18,8 @@ import bgImage from './assets/coin.png';
 function App() {
   return (
     <div
-    className="min-h-screen"
-    style={{ 
-      background: 'linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #0277bd 100%)',
-      backgroundAttachment: 'fixed'
-    }}
+    className="min-h-screen bg-cover bg-center"
+    style={{ backgroundImage: `url(${bgImage})` }}
   >
     <Router>
       <Routes>

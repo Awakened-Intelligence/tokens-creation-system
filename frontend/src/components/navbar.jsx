@@ -101,9 +101,11 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_id");
-    setIsAuthenticated(false);
     disconnectWallet();
-    navigate("/signin");
+    setIsAuthenticated(false);
+    setTimeout(() => {
+      navigate("/signin");
+    }, 100);
   };
 
   // ====================== RENDER ======================

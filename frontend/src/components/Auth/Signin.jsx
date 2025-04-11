@@ -12,6 +12,7 @@ const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {

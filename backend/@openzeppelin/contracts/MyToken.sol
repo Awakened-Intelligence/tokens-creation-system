@@ -4,18 +4,69 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract hubura is ERC20, Ownable {
-    uint256 public constant burnRate = 200; // 2.0% burn rate
-    uint256 private constant burnRateBase = 10000;
+contract james is ERC20, Ownable {
+    uint256 private _burnRate;
+    bool private _stakingEnabled;
+    bool private _mintingEnabled;
 
-    mapping(address => uint256) public stakedBalances;
+    constructor(string memory _name, string memory _symbol, uint256 _initialSupply)
+        ERC20(_name, _symbol)
+        Ownable(msg.sender)
+    {
+        _mint(msg.sender, _initialSupply * 10 ** decimals());
+        _burnRate = 200; // 2.0%
+        _stakingEnabled = true;
+        _mintingEnabled = true;
+    }
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        uint256 _initialSupply
-    ) ERC20(_name, _symbol) Ownable(msg.sender) {
-        _mint(msg.sender, _initialSupply * 10**decimals());
+    function decimals() public pure override returns (uint8) {
+        return 12;
+    }
+
+    function burnRate() public view returns (uint256) {
+        return _burnRate;
+    }
+
+    function stakingEnabled() public view returns (bool) {
+        return _stakingEnabled;
+    }
+
+    function mintingEnabled() public view returns (bool) {
+        return _mintingEnabled;
+    }
+
+    function setBurnRate(uint256 newBurnRate) public onlyOwner {
+        require(newBurnRate <= 10000, "Burn rate cannot exceed 100%");
+        _burnRate = newBurnRate;
+    }
+
+    function setStakingEnabled(bool enabled) public onlyOwner {
+        _stakingEnabled = enabled;
+    }
+
+    function setMintingEnabled(bool enabled) public onlyOwner {
+        _mintingEnabled = enabled;
+    }
+
+    function burn(uint256 amount) public {
+        require(_burnRate > 0, "Burning is disabled");
+        uint256 burnAmount = (amount * _burnRate) / 10000;
+        _burn(msg.sender, burnAmount);
+    }
+
+    function stake(uint256 amount) public {
+        require(_stakingEnabled, "Staking is disabled");
+        // Add staking logic here
+    }
+
+    function unstake(uint256 amount) public {
+        require(_stakingEnabled, "Staking is disabled");
+        // Add unstaking logic here
+    }
+
+    function mint(address to, uint256 amount) public onlyOwner {
+        require(_mintingEnabled, "Minting is disabled");
+        _mint(to, amount);
     }
 
     function _update(
@@ -23,38 +74,10 @@ contract hubura is ERC20, Ownable {
         address to,
         uint256 amount
     ) internal virtual override {
-        if (from != address(0) && to != address(0) && amount > 0) {
-            uint256 burnAmount = (amount * burnRate) / burnRateBase;
+        super._update(from, to, amount);
+        if (_burnRate > 0 && from != address(0) && to != address(0)) {
+            uint256 burnAmount = (amount * _burnRate) / 10000;
             _burn(from, burnAmount);
-            super._update(from, to, amount - burnAmount);
-        } else {
-            super._update(from, to, amount);
         }
-    }
-
-    function stake(uint256 _amount) public {
-        require(_amount > 0, "Stake amount must be greater than 0");
-        require(
-            balanceOf(msg.sender) >= _amount,
-            "Insufficient balance to stake"
-        );
-
-        _transfer(msg.sender, address(this), _amount);
-        stakedBalances[msg.sender] += _amount;
-    }
-
-    function unstake(uint256 _amount) public {
-        require(_amount > 0, "Unstake amount must be greater than 0");
-        require(
-            stakedBalances[msg.sender] >= _amount,
-            "Insufficient staked balance"
-        );
-
-        stakedBalances[msg.sender] -= _amount;
-        _transfer(address(this), msg.sender, _amount);
-    }
-
-    function mint(address _to, uint256 _amount) public onlyOwner {
-        _mint(_to, _amount);
     }
 }

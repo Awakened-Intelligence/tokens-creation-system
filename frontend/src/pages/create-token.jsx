@@ -249,7 +249,7 @@ function CreateToken() {
       <div className="relative z-10 pt-20 px-4">
         <div className="flex flex-col items-center">
           {/* Form Container */}
-          <div className="mb-20 space-y-6 bg-black shadow-2xl rounded-3xl p-8 max-w-3xl border-2 border-black w-full mx-auto">
+          <div className="mb-20 space-y-6 bg-black shadow-2xl rounded-3xl p-8 max-w-3xl w-full mx-auto backdrop-blur-lg bg-opacity-70">
             <h2 className="text-3xl font-semibold text-white text-center">
               Create Your Token
             </h2>
@@ -261,7 +261,7 @@ function CreateToken() {
                 placeholder="Token Name"
                 value={tokenName}
                 onChange={(e) => setTokenName(e.target.value)}
-                className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
+                className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md bg-white bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>

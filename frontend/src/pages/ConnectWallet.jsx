@@ -126,7 +126,7 @@ function ConnectWallet() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="backdrop-blur-lg bg-white/10 p-8 rounded-3xl shadow-2xl w-full max-w-md mx-4 border border-white/20"
+          className="backdrop-blur-lg bg-white/20 p-8 rounded-3xl shadow-2xl w-full max-w-md mx-4 border border-white/30"
         >
           <motion.h2 
             className="text-4xl font-bold mb-6 text-white text-center"
@@ -145,14 +145,14 @@ function ConnectWallet() {
                 transition={{ type: "spring", stiffness: 200 }}
                 className="space-y-4"
               >
-                <div className="bg-white/30 p-4 rounded-2xl backdrop-blur-md">
+                <div className="bg-white/40 p-4 rounded-2xl backdrop-blur-lg">
                   <p className="text-white text-center break-words">
-                    <span className="block text-sm opacity-100 font-medium mb-1">Connected Address</span>
-                    <span className="font-mono text-lg">{walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}</span>
+                    <span className="block text-sm font-semibold mb-1 text-white/90">Connected Address</span>
+                    <span className="font-mono text-lg font-bold">{walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}</span>
                   </p>
                   <p className="text-white text-center mt-2">
-                    <span className="block text-sm opacity-100 font-medium">Network</span>
-                    <span className="font-semibold text-lg">{network || "Unknown"}</span>
+                    <span className="block text-sm font-semibold text-white/90">Network</span>
+                    <span className="font-bold text-lg">{network || "Unknown"}</span>
                   </p>
                 </div>
                 <motion.button

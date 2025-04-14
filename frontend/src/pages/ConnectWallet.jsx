@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import { ethers } from "ethers";
@@ -15,7 +14,7 @@ function ConnectWallet() {
     const initializeWallet = async () => {
       setMetaMaskAvailable(!!window.ethereum?.isMetaMask);
       const savedWallet = localStorage.getItem("walletAddress");
-      
+
       if (savedWallet && window.ethereum) {
         try {
           const provider = new ethers.BrowserProvider(window.ethereum);
@@ -126,7 +125,7 @@ function ConnectWallet() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="backdrop-blur-lg bg-white/20 p-8 rounded-3xl shadow-2xl w-full max-w-md mx-4 border border-white/30"
+          className="backdrop-blur-lg bg-white/20 p-8 rounded-3xl shadow-2xl max-w-md w-full mx-auto border border-white/30"
         >
           <motion.h2 
             className="text-4xl font-bold mb-6 text-white text-center"
@@ -176,7 +175,7 @@ function ConnectWallet() {
                     whileTap={{ scale: 0.98 }}
                     onClick={connectMetaMask}
                     disabled={isConnecting}
-                    className="w-full bg-black hover:bg-gray-800 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 backdrop-blur-sm border border-white/20"
+                    className="w-full max-w-xs bg-black hover:bg-gray-800 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 backdrop-blur-sm border border-white/20"
                   >
                     {isConnecting ? (
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import { ethers } from "ethers";
@@ -110,7 +111,7 @@ function ConnectWallet() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="backdrop-blur-lg bg-white/30 p-8 rounded-3xl shadow-2xl w-full max-w-md mx-4"
+          className="backdrop-blur-lg bg-white/10 p-8 rounded-3xl shadow-2xl w-full max-w-md mx-4 border border-white/20"
         >
           <motion.h2 
             className="text-4xl font-bold mb-6 text-white text-center"
@@ -160,7 +161,7 @@ function ConnectWallet() {
                     whileTap={{ scale: 0.98 }}
                     onClick={connectMetaMask}
                     disabled={isConnecting}
-                    className="w-full bg-black hover:bg-gray-800 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2"
+                    className="w-full bg-black hover:bg-gray-800 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 backdrop-blur-sm border border-white/20"
                   >
                     {isConnecting ? (
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -173,7 +174,7 @@ function ConnectWallet() {
                     href="https://metamask.io/download/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-center py-4 px-6 rounded-xl font-semibold hover:from-orange-600 hover:to-yellow-600 transition-all duration-300"
+                    className="block w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-center py-4 px-6 rounded-xl font-semibold hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 backdrop-blur-sm"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >

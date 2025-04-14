@@ -32,7 +32,7 @@ const SignIn = () => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem("user_id", response.data.user_id);
       clearWallet();
-      navigate('/dashboard');
+      navigate('/');
       toast.success('Login successful!');  // Show success toast after navigation
     } catch (error) {
       toast.error(error.response?.data?.message || 'Sign-in failed.');  // Show error toast

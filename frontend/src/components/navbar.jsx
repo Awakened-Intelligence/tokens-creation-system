@@ -126,7 +126,7 @@ function Navbar() {
 
       {/* DESKTOP SLIDING SIDEBAR (fills entire height) */}
       <div className="hidden lg:block fixed inset-y-0 left-0 z-50">
-        
+
         {/* Hamburger Icon */}
         <div 
           onClick={() => setIsDesktopMenuOpen(!isDesktopMenuOpen)}
@@ -246,7 +246,14 @@ function Navbar() {
         Includes links, wallet, and auth buttons if desired.
       */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-50">
+        <div 
+          className="lg:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsMobileMenuOpen(false);
+            }
+          }}
+        >
           {/* Slide-Out Panel */}
           <div className="bg-blue-600 w-64 h-full p-6">
             {/* Close button or click outside to close */}

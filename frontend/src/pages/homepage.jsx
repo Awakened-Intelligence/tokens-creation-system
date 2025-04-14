@@ -27,22 +27,22 @@ function Home() {
 
           {/* Features Section */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6">
-            <div className="p-6 bg-gradient-to-b from-black to-gray-800 text-white shadow-2xl rounded-3xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 border-2 border-black hover:shadow-3xl">
+            <div className="p-6 backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-3xl text-white">
               <h3 className="text-xl font-semibold">AI Smart Contract Generation</h3>
               <p className="mt-2">Generate error-free contracts instantly.</p>
             </div>
 
-            <div className="p-6 bg-gradient-to-b from-black to-gray-800 text-white shadow-2xl rounded-3xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 border-2 border-black hover:shadow-3xl">
+            <div className="p-6 backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-3xl text-white">
               <h3 className="text-xl font-semibold">Deploy on Multiple Blockchains</h3>
               <p className="mt-2">Supports Ethereum, BSC, and Solana.</p>
             </div>
 
-            <div className="p-6 bg-gradient-to-b from-black to-gray-800 text-white shadow-2xl rounded-3xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 border-2 border-black hover:shadow-3xl">
+            <div className="p-6 backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-3xl text-white">
               <h3 className="text-xl font-semibold">No Coding Required</h3>
               <p className="mt-2">Easily create tokens without any programming.</p>
             </div>
 
-            <div className="p-6 bg-gradient-to-b from-black to-gray-800 text-white shadow-2xl rounded-3xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 border-2 border-black hover:shadow-3xl">
+            <div className="p-6 backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-3xl text-white">
               <h3 className="text-xl font-semibold">Secure & Audited Contracts</h3>
               <p className="mt-2">Ensuring security and best practices.</p>
             </div>

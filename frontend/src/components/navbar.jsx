@@ -200,30 +200,29 @@ function Navbar() {
       <div className="hidden lg:flex fixed top-4 right-4 z-50 space-x-4">
         {walletAddress ? (
           <div className="flex items-center space-x-2">
-            <span className="bg-green-500 px-4 py-2 rounded-md transition-all duration-500 transform hover:scale-105 hover:shadow-xl">
+            <span className="bg-purple-500/30 backdrop-blur-sm text-white px-4 py-2 rounded-xl border border-purple-300/30 transition-all duration-500 transform hover:scale-105 hover:shadow-xl">
               {walletType === "Ethereum" ? "ETH" : "SOL"} | {network} |{" "}
               {walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}
             </span>
-            <button onClick={disconnectWallet} className="btn">
+            <button onClick={disconnectWallet} className="btn bg-red-500/20 hover:bg-red-500/40 text-white border border-red-300/30">
               Disconnect
             </button>
           </div>
         ) : (
           <Link to="/connect-wallet">
-            <button className="btn">Connect Wallet</button>
+            <button className="btn bg-indigo-500/20 hover:bg-indigo-500/40 text-white border border-indigo-300/30">Connect Wallet</button>
           </Link>
         )}
         {!isAuthenticated ? (
           <Link to="/signin">
-            <button className="btn" style={{ backgroundColor: "#4169e1" }}>
+            <button className="btn bg-blue-500/20 hover:bg-blue-500/40 text-white border border-blue-300/30">
               Sign In
             </button>
           </Link>
         ) : (
           <button
             onClick={handleLogout}
-            className="btn"
-            style={{ backgroundColor: "#4169e1" }}
+            className="btn bg-blue-500/20 hover:bg-blue-500/40 text-white border border-blue-300/30"
           >
             Logout
           </button>

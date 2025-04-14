@@ -102,12 +102,12 @@ function Dashboard() {
       {/* Main Content Container (offset below navbar) */}
       <div className="relative z-10 pt-20 px-4">
         <div className="flex flex-col items-center">
-          <h2 className="text-3xl font-bold text-center text-black">
+          <h2 className="text-3xl font-bold text-center text-white">
             Token Dashboard
           </h2>
 
           {/* Outer Container for Wallet + Tokens */}
-          <div className="max-w-5xl mx-auto p-6 bg-white shadow-2xl rounded-lg flex flex-col items-center mt-10 border-2 border-black">
+          <div className="max-w-5xl mx-auto p-6 backdrop-blur-lg bg-white/10 shadow-2xl rounded-3xl flex flex-col items-center mt-10 border border-white/20">
             {/* Wallet Connection Status */}
             <div className="mt-2 text-center">
               {walletConnected ? (
@@ -130,7 +130,7 @@ function Dashboard() {
                   tokens.map((token, index) => (
                     <div
                       key={index}
-                      className="p-4 border shadow-2xl rounded-lg text-center transform transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-3xl"
+                      className="p-4 backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-xl text-center transform transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-3xl text-white"
                       onClick={() => handleTokenClick(token)}
                     >
                       <h4 className="text-lg font-semibold">

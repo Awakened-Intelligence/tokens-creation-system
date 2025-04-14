@@ -126,10 +126,18 @@ function Navbar() {
 
       {/* DESKTOP SLIDING SIDEBAR (fills entire height) */}
       <div className="hidden lg:block fixed inset-y-0 left-0 z-50">
+        {/* Overlay */}
+        {isDesktopMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setIsDesktopMenuOpen(false)}
+          />
+        )}
+        
         {/* Hamburger Icon */}
         <div 
           onClick={() => setIsDesktopMenuOpen(!isDesktopMenuOpen)}
-          className="fixed top-20 left-4 cursor-pointer z-50 hover:scale-110 transition-transform"
+          className={`fixed top-20 left-4 cursor-pointer z-50 hover:scale-110 transition-transform ${isDesktopMenuOpen ? 'hidden' : 'block'}`}
         >
           <FiMenu className="text-3xl" />
         </div>
@@ -142,6 +150,7 @@ function Navbar() {
             transition-transform duration-300
             mt-16
             bg-gradient-to-r from-[#6c63ff] to-[#ff9aca]
+            z-50
           `}
         >
           {/* Navigation Links */}

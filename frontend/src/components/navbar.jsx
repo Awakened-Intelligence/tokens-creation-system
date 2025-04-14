@@ -199,18 +199,24 @@ function Navbar() {
       */}
       <div className="hidden lg:flex fixed top-4 right-4 z-50 space-x-4">
         {walletAddress ? (
-          <div className="flex items-center space-x-2">
-            <span className="bg-green-500 px-4 py-2 rounded-md transition-all duration-500 transform hover:scale-105 hover:shadow-xl">
+          <div className="flex items-center space-x-3">
+            <span className="bg-opacity-20 backdrop-blur-md bg-green-500 text-green-400 px-4 py-2 rounded-xl border border-green-400/30 font-medium transition-all duration-500 transform hover:scale-105 hover:shadow-xl flex items-center">
+              <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
               {walletType === "Ethereum" ? "ETH" : "SOL"} | {network} |{" "}
               {walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}
             </span>
-            <button onClick={disconnectWallet} className="btn">
+            <button 
+              onClick={disconnectWallet} 
+              className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-4 py-2 rounded-xl border border-red-400/30 font-medium transition-all duration-300"
+            >
               Disconnect
             </button>
           </div>
         ) : (
           <Link to="/connect-wallet">
-            <button className="btn">Connect Wallet</button>
+            <button className="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-6 py-2 rounded-xl border border-blue-400/30 font-medium transition-all duration-300 transform hover:scale-105">
+              Connect Wallet
+            </button>
           </Link>
         )}
         {!isAuthenticated ? (

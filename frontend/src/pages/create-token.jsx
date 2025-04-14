@@ -249,7 +249,7 @@ function CreateToken() {
       <div className="relative z-10 pt-20 px-4">
         <div className="flex flex-col items-center">
           {/* Form Container */}
-          <div className="mb-20 space-y-6 bg-black shadow-2xl rounded-3xl p-8 max-w-3xl w-full mx-auto backdrop-blur-lg bg-opacity-70">
+          <div className="mb-20 space-y-6 backdrop-blur-lg bg-white/10 shadow-2xl rounded-3xl p-8 max-w-3xl w-full mx-auto border border-white/20">
             <h2 className="text-3xl font-semibold text-white text-center">
               Create Your Token
             </h2>

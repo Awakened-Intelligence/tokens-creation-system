@@ -124,14 +124,18 @@ function Navbar() {
       </div>
 
       {/* DESKTOP SLIDING SIDEBAR (fills entire height) */}
-      <div className="hidden lg:block fixed inset-y-0 left-0 z-50 group">
+      <div className="hidden lg:block fixed inset-y-0 left-0 z-50">
+        {/* Hamburger Icon */}
+        <div className="fixed top-20 left-4 cursor-pointer z-50 hover:scale-110 transition-transform">
+          <FiMenu className="text-3xl" />
+        </div>
         <nav
           className="
             w-64 
             h-full 
             p-6 flex flex-col 
             transform -translate-x-full 
-            group-hover:translate-x-0 
+            hover:translate-x-0 
             transition-transform duration-300
             mt-16
             bg-gradient-to-r from-[#6c63ff] to-[#ff9aca]

@@ -12,11 +12,26 @@ function ConnectWallet() {
   const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
-    setMetaMaskAvailable(!!window.ethereum?.isMetaMask);
-    const savedWallet = localStorage.getItem("walletAddress");
-    if (savedWallet) {
-      setWalletAddress(savedWallet);
-    }
+    const initializeWallet = async () => {
+      setMetaMaskAvailable(!!window.ethereum?.isMetaMask);
+      const savedWallet = localStorage.getItem("walletAddress");
+      
+      if (savedWallet && window.ethereum) {
+        try {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const network = await provider.getNetwork();
+          setWalletAddress(savedWallet);
+          setNetwork(network.name);
+        } catch (err) {
+          console.error("Failed to restore wallet connection:", err);
+          localStorage.removeItem("walletAddress");
+          setWalletAddress("");
+          setNetwork("");
+        }
+      }
+    };
+
+    initializeWallet();
 
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", handleAccountChange);

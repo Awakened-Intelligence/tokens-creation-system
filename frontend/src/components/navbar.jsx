@@ -204,7 +204,7 @@ function Navbar() {
               {walletType === "Ethereum" ? "ETH" : "SOL"} | {network} |{" "}
               {walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}
             </span>
-            <button onClick={disconnectWallet} className="btn bg-red-500/20 hover:bg-red-500/40 text-white border border-red-300/30">
+            <button onClick={disconnectWallet} className="btn bg-gradient-to-r from-red-600 to-pink-500 hover:from-red-700 hover:to-pink-600 text-white border border-red-300/30">
               Disconnect
             </button>
           </div>
@@ -222,7 +222,7 @@ function Navbar() {
         ) : (
           <button
             onClick={handleLogout}
-            className="btn bg-blue-500/20 hover:bg-blue-500/40 text-white border border-blue-300/30"
+            className="btn bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white border border-purple-300/30"
           >
             Logout
           </button>

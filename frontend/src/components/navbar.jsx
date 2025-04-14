@@ -207,7 +207,7 @@ function Navbar() {
             </span>
             <button 
               onClick={disconnectWallet} 
-              className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-4 py-2 rounded-xl border border-red-400/30 font-medium transition-all duration-300"
+              className="bg-red-500/30 hover:bg-red-500/60 text-red-600 px-4 py-2 rounded-xl border border-red-400/30 font-medium transition-all duration-300 disconnect"
             >
               Disconnect
             </button>
@@ -335,7 +335,7 @@ function Navbar() {
                   </span>
                   <button
                     onClick={disconnectWallet}
-                    className="btn w-full"
+                    className="btn w-full disconnect"
                   >
                     Disconnect
                   </button>

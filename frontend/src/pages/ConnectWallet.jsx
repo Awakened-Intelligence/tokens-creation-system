@@ -145,14 +145,14 @@ function ConnectWallet() {
                 transition={{ type: "spring", stiffness: 200 }}
                 className="space-y-4"
               >
-                <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
+                <div className="bg-white/30 p-4 rounded-2xl backdrop-blur-md">
                   <p className="text-white text-center break-words">
-                    <span className="block text-sm opacity-80 mb-1">Connected Address</span>
-                    <span className="font-mono">{walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}</span>
+                    <span className="block text-sm opacity-100 font-medium mb-1">Connected Address</span>
+                    <span className="font-mono text-lg">{walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}</span>
                   </p>
                   <p className="text-white text-center mt-2">
-                    <span className="block text-sm opacity-80">Network</span>
-                    <span className="font-semibold">{network || "Unknown"}</span>
+                    <span className="block text-sm opacity-100 font-medium">Network</span>
+                    <span className="font-semibold text-lg">{network || "Unknown"}</span>
                   </p>
                 </div>
                 <motion.button

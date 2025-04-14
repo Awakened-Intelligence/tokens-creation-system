@@ -111,7 +111,7 @@ function Dashboard() {
             {/* Wallet Connection Status */}
             <div className="mt-2 text-center">
               {walletConnected ? (
-                <p className="text-green-600 font-semibold">
+                <p className="text-black-600 font-semibold">
                   Connected Wallet:{" "}
                   {walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}
                 </p>
@@ -177,7 +177,7 @@ function Dashboard() {
                     href={`https://sepolia.lineascan.build/address/${selectedToken.contract_address}#code`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 underline break-all"
+                    className="text-white-600 underline break-all"
                   >
                     {selectedToken.contract_address}
                   </a>

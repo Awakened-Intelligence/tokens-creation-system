@@ -126,7 +126,12 @@ function Navbar() {
 
       {/* DESKTOP SLIDING SIDEBAR (fills entire height) */}
       <div className="hidden lg:block fixed inset-y-0 left-0 z-50">
-
+        {isDesktopMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50"
+            onClick={() => setIsDesktopMenuOpen(false)}
+          />
+        )}
         {/* Hamburger Icon */}
         <div 
           onClick={() => setIsDesktopMenuOpen(!isDesktopMenuOpen)}

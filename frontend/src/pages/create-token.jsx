@@ -353,14 +353,14 @@ function CreateToken() {
               <button
                 onClick={generateSmartContract}
                 className="btn"
-                style={{ backgroundColor: "#4169e1" }}
+                style={{ background: "linear-gradient(45deg, #8B5CF6, #3B82F6)" }}
               >
                 Generate Contract
               </button>
               <button
                 onClick={deploySmartContract}
                 className="btn"
-                style={{ backgroundColor: "#4169e1" }}
+                style={{ background: "linear-gradient(45deg, #8B5CF6, #3B82F6)" }}
               >
                 Deploy Token
               </button>

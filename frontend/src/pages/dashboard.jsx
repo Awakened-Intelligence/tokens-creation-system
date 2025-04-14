@@ -154,7 +154,7 @@ function Dashboard() {
           {/* Token Info Modal */}
           {showModal && selectedToken && (
             <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center">
-              <div className="bg-white p-6 rounded-lg shadow-2xl w-96">
+              <div className="backdrop-blur-lg bg-white/20 p-6 rounded-lg shadow-2xl w-96 border border-white/30 text-white">
                 <h2 className="text-2xl font-semibold mb-4">
                   Token Information
                 </h2>

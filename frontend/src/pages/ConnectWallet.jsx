@@ -104,7 +104,7 @@ function ConnectWallet() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500">
+    <div className="min-h-screen">
       <Navbar />
       <div className="flex justify-center items-center h-screen">
         <motion.div 

@@ -296,7 +296,14 @@ function CreateToken() {
                 type="number"
                 placeholder="Decimals (0-18)"
                 value={decimals}
-                onChange={(e) => setDecimals(e.target.value)}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (value >= 0 && value <= 18) {
+                    setDecimals(value);
+                  }
+                }}
+                min="0"
+                max="18"
                 className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
                 required
               />
@@ -322,7 +329,15 @@ function CreateToken() {
                 type="number"
                 placeholder="Burn Rate (0-10%)"
                 value={burnRate}
-                onChange={(e) => setBurnRate(e.target.value)}
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  if (value >= 0 && value <= 10) {
+                    setBurnRate(value);
+                  }
+                }}
+                min="0"
+                max="10"
+                step="0.1"
                 className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
               />
 

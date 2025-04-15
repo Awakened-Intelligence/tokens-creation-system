@@ -20,7 +20,7 @@ function Home() {
             AI-powered token generator for Ethereum, Binance Smart Chain, and Solana.
           </p>
           <Link to="/create-token">
-            <button className="btn mt-6 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white border border-purple-300/30">
+            <button className="btn bg-indigo-500/20 hover:bg-indigo-500/40 text-white border border-indigo-300/30">
               Create Token
             </button>
           </Link>

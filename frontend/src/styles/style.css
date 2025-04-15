@@ -75,6 +75,7 @@
 
 button:hover {
   color: black;
+  background:white;
 }
 
 button:after {
@@ -82,16 +83,16 @@ button:after {
   background: white;
   position: absolute;
   z-index: -1;
-  left: 0;
-  right: 0;
+  left: -20%;
+  right: -20%;
   top: 0;
   bottom: 0;
   transform: skewX(-45deg) scale(0, 1);
   transition: all 0.5s;
 }
 
-button:hover:after {
+/* button:hover:after {
   transform: skewX(-45deg) scale(1, 1);
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
-}
+} */

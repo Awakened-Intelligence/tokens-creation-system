@@ -156,10 +156,8 @@ function ConnectWallet() {
                   </p>
                 </div>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                   onClick={disconnectWallet}
-                  className="w-full bg-red-500/80 hover:bg-red-600/80 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm"
+                  className="w-full bg-red-500/80 text-white py-3 px-6 rounded-xl font-semibold backdrop-blur-sm"
                 >
                   Disconnect
                 </motion.button>
@@ -172,11 +170,9 @@ function ConnectWallet() {
               >
                 {metaMaskAvailable ? (
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                     onClick={connectMetaMask}
                     disabled={isConnecting}
-                    className="w-full bg-black hover:bg-gray-800 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 backdrop-blur-sm border border-white/20"
+                    className="w-full bg-black text-white py-4 px-6 rounded-xl font-semibold flex items-center justify-center space-x-2 backdrop-blur-sm border border-white/20"
                   >
                     {isConnecting ? (
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

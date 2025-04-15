@@ -74,8 +74,8 @@ const SignUp = () => {
             {showPassword ? <FaEyeSlash /> : <FaEye />} {/*  Icon changes */}
           </span>
         </div>
-            <p className="text-center mt-3 text-gray-600">
-                     Don't have an account?{" "}
+            <p className="text-center mt-3 text-black-600">
+                     Already have an account?{" "}
                      <Link to="/signin" className="text-white hover:underline">
                        Sign in
                      </Link>

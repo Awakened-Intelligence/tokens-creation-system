@@ -61,8 +61,9 @@ const SignIn = () => {
     <div className="mt-30 max-w-3xl mx-auto py-10 px-14 bg-black/20 backdrop-blur-md shadow-2xl rounded-3xl relative"> {/* Added transparency here */}
 
       {/* Home Icon to Redirect */}
-      <Link to="/" className="absolute top-5 left-5 text-white text-2xl hover:text-blue-400 transition-all">
+      <Link to="/" className="absolute top-5 left-5 text-white text-2xl hover:text-blue-400 transition-all flex items-center gap-2">
         <FiHome size={28} />
+        <span className="text-sm">← Back to Home</span>
       </Link>
 
       <h2 className="text-2xl font-bold text-center mb-4 text-white">Sign In</h2>

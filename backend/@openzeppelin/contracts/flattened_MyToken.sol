@@ -708,17 +708,19 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
 
 
 
-contract jammycoin is ERC20, Ownable {
-    uint256 public constant burnRate = 200; // 2.0%
-    uint256 private constant burnRateBase = 10000;
-
-    mapping(address => uint256) public stakedBalances;
+contract jammyco is ERC20, Ownable {
+    uint256 private _burnRate;
+    bool private _stakingEnabled;
+    bool private _mintingEnabled;
 
     constructor(string memory _name, string memory _symbol, uint256 _initialSupply)
         ERC20(_name, _symbol)
         Ownable(msg.sender)
     {
         _mint(msg.sender, _initialSupply * 10 ** decimals());
+        _burnRate = 10; // 1.0%
+        _stakingEnabled = true;
+        _mintingEnabled = true;
     }
 
     function _update(
@@ -726,32 +728,29 @@ contract jammycoin is ERC20, Ownable {
         address to,
         uint256 amount
     ) internal virtual override {
-        if (burnRate > 0 && from != address(0) && to != address(0)) {
-            uint256 burnAmount = (amount * burnRate) / burnRateBase;
-            _burn(from, burnAmount);
-            amount -= burnAmount;
-        }
-
         super._update(from, to, amount);
+
+        if (_burnRate > 0 && from != address(0) && to != address(0)) {
+            uint256 burnAmount = amount * _burnRate / 1000;
+            _burn(from, burnAmount);
+        }
     }
 
-    function stake(uint256 _amount) public {
-        require(_amount > 0, "Stake amount must be greater than 0");
-        require(balanceOf(msg.sender) >= _amount, "Insufficient balance");
+    function stake(uint256 amount) public {
+        require(_stakingEnabled, "Staking is not enabled");
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
 
-        _transfer(msg.sender, address(this), _amount);
-        stakedBalances[msg.sender] += _amount;
+        _burn(msg.sender, amount);
     }
 
-    function unstake(uint256 _amount) public {
-        require(_amount > 0, "Unstake amount must be greater than 0");
-        require(stakedBalances[msg.sender] >= _amount, "Insufficient staked balance");
+    function unstake(uint256 amount) public {
+        require(_stakingEnabled, "Staking is not enabled");
 
-        _transfer(address(this), msg.sender, _amount);
-        stakedBalances[msg.sender] -= _amount;
+        _mint(msg.sender, amount);
     }
 
-    function mint(address _to, uint256 _amount) public onlyOwner {
-        _mint(_to, _amount);
+    function mint(address to, uint256 amount) public onlyOwner {
+        require(_mintingEnabled, "Minting is not enabled");
+        _mint(to, amount);
     }
 }

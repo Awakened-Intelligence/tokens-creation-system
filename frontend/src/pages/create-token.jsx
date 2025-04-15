@@ -96,7 +96,7 @@ function CreateToken() {
       return;
     }
     try {
-      setStatus("🔄 Preparing deployment transaction...");
+      setStatus();
 
       // Request unsigned transaction from backend
       const response = await axios.post(
@@ -294,7 +294,7 @@ function CreateToken() {
             <div className="flex justify-center">
               <input
                 type="number"
-                placeholder="Decimals"
+                placeholder="Decimals (0-18)"
                 value={decimals}
                 onChange={(e) => setDecimals(e.target.value)}
                 className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
@@ -320,7 +320,7 @@ function CreateToken() {
             <div className="flex flex-col items-center space-y-4">
               <input
                 type="number"
-                placeholder="Burn Rate (%)"
+                placeholder="Burn Rate (0-10%)"
                 value={burnRate}
                 onChange={(e) => setBurnRate(e.target.value)}
                 className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"

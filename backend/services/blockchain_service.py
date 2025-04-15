@@ -19,7 +19,7 @@ load_dotenv()
 
 INFURA_URL = os.getenv("INFURA_URL")
 INFURA_PRIVATE_KEY = os.getenv("INFURA_PRIVATE_KEY")
-LINEASCAN_API_KEY = os.getenv("LINEASCAN_API_KEY")
+ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")
 CHAIN_ID = os.getenv("CHAIN_ID", "5")  # Default to Goerli
 
 install_solc("0.8.20")  # Ensure correct Solidity version
@@ -393,7 +393,7 @@ def verify_contract(contract_address, flattened_contract_path, deployment_byteco
 
         # **Step 7: Send Verification Request**
         verification_payload = {
-            "apikey": LINEASCAN_API_KEY,
+            "apikey": ETHERSCAN_API_KEY,
             "module": "contract",
             "action": "verifysourcecode",
             "contractaddress": contract_address,
@@ -408,7 +408,8 @@ def verify_contract(contract_address, flattened_contract_path, deployment_byteco
         }
              
 
-        response = requests.post("https://api-sepolia.lineascan.build/api", data=verification_payload)
+        # response = requests.post("https://api-sepolia.lineascan.build/api", data=verification_payload)
+        response = requests.post("https://api.etherscan.io/api", data=verification_payload)
         response_json = response.json()
         print("🛠 Verification Response:", response_json)
 

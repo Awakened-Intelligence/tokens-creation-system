@@ -28,12 +28,12 @@ const SignUp = () => {
       toast.error(error.response?.data?.message || ' Sign-up failed.');
     }
   };
-  
+
 
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-    <div className="mt-30 max-w-3xl mx-auto py-10 px-14 bg-black shadow-2xl rounded-3xl relative">
+    <div className="mt-30 max-w-3xl mx-auto py-10 px-14 bg-black/20 backdrop-blur-md shadow-2xl rounded-3xl relative">
 
         {/* Home Icon to Redirect */}
         <Link to="/" className="absolute top-5 left-5 text-white text-2xl hover:text-gray-400 transition-all">

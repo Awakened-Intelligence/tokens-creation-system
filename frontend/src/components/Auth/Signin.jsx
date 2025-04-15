@@ -58,7 +58,7 @@ const SignIn = () => {
         </div>
       </div>
     )}
-    <div className="mt-30 max-w-3xl mx-auto py-10 px-14 bg-black shadow-2xl rounded-3xl relative">
+    <div className="mt-30 max-w-3xl mx-auto py-10 px-14 bg-black/20 backdrop-blur-md shadow-2xl rounded-3xl relative"> {/* Added transparency here */}
 
       {/* Home Icon to Redirect */}
       <Link to="/" className="absolute top-5 left-5 text-white text-2xl hover:text-blue-400 transition-all">

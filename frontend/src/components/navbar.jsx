@@ -222,7 +222,7 @@ function Navbar() {
         ) : (
           <button
             onClick={handleLogout}
-            className="btn bg-blue-500/20 hover:bg-blue-500/40 text-white border border-blue-300/30"
+            className="btn" style={{ backgroundColor: '#ff0000' }}
           >
             Logout
           </button>

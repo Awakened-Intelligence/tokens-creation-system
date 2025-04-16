@@ -171,7 +171,7 @@ function Dashboard() {
                   <strong>Network:</strong> {selectedToken.network}
                 </p>
 
-                <p>
+                {/* <p>
                   <strong>Contract Address:</strong>{" "}
                   <a
                     href={`https://sepolia.lineascan.build/address/${selectedToken.contract_address}#code`}
@@ -181,8 +181,18 @@ function Dashboard() {
                   >
                     {selectedToken.contract_address}
                   </a>
+                </p> */}
+                <p>
+                  <strong>Contract Address:</strong>{" "}
+                  <a
+                    href={`https://etherscan.io/address/${selectedToken.contract_address}#code`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white-600 underline break-all"
+                  >
+                    {selectedToken.contract_address}
+                  </a>
                 </p>
-
                 <button
                   className="btn mt-2"
                   onClick={() => handleCopyAddress(selectedToken.contract_address)}

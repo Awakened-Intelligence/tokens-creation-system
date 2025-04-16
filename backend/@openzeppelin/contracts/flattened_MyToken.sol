@@ -708,49 +708,59 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
 
 
 
-contract jammyco is ERC20, Ownable {
-    uint256 private _burnRate;
-    bool private _stakingEnabled;
-    bool private _mintingEnabled;
+contract MAINNET is ERC20, Ownable {
+    uint256 private _totalSupply = 100000 * 10**12;
+    uint8 private immutable _decimals = 12;
+    bool public stakingEnabled;
+    bool public mintable;
+    uint256 public burnRate = 200; // 2.0% expressed in basis points
+
+    mapping(address => uint256) private _stakes;
 
     constructor(string memory _name, string memory _symbol, uint256 _initialSupply)
         ERC20(_name, _symbol)
-        Ownable(msg.sender)
+        Ownable(msg.sender, )
     {
-        _mint(msg.sender, _initialSupply * 10 ** decimals());
-        _burnRate = 10; // 1.0%
-        _stakingEnabled = true;
-        _mintingEnabled = true;
+        _mint(msg.sender, _initialSupply * 10**decimals());
     }
 
-    function _update(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual override {
-        super._update(from, to, amount);
-
-        if (_burnRate > 0 && from != address(0) && to != address(0)) {
-            uint256 burnAmount = amount * _burnRate / 1000;
-            _burn(from, burnAmount);
-        }
+    function decimals() public view virtual override returns (uint8) {
+        return _decimals;
     }
 
-    function stake(uint256 amount) public {
-        require(_stakingEnabled, "Staking is not enabled");
-        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
-
-        _burn(msg.sender, amount);
+    function setStakingEnabled(bool _enabled) external onlyOwner {
+        stakingEnabled = _enabled;
     }
 
-    function unstake(uint256 amount) public {
-        require(_stakingEnabled, "Staking is not enabled");
-
-        _mint(msg.sender, amount);
+    function setMintable(bool _enabled) external onlyOwner {
+        mintable = _enabled;
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
-        require(_mintingEnabled, "Minting is not enabled");
+        require(mintable, "Minting not enabled");
         _mint(to, amount);
+    }
+
+    function stake(uint256 amount) public {
+        require(stakingEnabled, "Staking not enabled");
+        _burn(msg.sender, amount);
+        _stakes[msg.sender] += amount;
+    }
+
+    function unstake(uint256 amount) public {
+        require(_stakes[msg.sender] >= amount, "Not enough staked tokens");
+        _stakes[msg.sender] -= amount;
+        _mint(msg.sender, amount);
+    }
+
+    function _update(address from, address to, uint256 amount) internal virtual override {
+        super._update(from, to, amount);
+        
+        if (from != address(0)) { // Burning on transfer
+            uint256 burnAmount = (amount * burnRate) / 10000;
+            if (burnAmount > 0) {
+                _burn(from, burnAmount);
+            }
+        }
     }
 }

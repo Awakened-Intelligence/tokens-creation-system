@@ -11,7 +11,7 @@ from routes.token_routes import token_bp
 
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
 CORS(app)
 
 app.config.from_object(Config)
@@ -30,9 +30,15 @@ def test_db():
         return {"message": "MongoDB Connected Successfully!"}, 200
     except Exception as e:
         return {"error": str(e)}, 500
-@app.route('/')
-def home():
-    return "Hello, this is the root route!"
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    try:
+        # First try to serve static files from the frontend/build directory
+        return app.send_static_file(path)
+    except:
+        # If not found, return index.html for client-side routing
+        return app.send_static_file('index.html')
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

@@ -33,12 +33,9 @@ def test_db():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    try:
-        # First try to serve static files from the frontend/build directory
-        return app.send_static_file(path)
-    except:
-        # If not found, return index.html for client-side routing
-        return app.send_static_file('index.html')
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

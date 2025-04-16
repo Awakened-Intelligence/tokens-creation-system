@@ -184,15 +184,8 @@ def generate_smart_contract(token_data):
 
             - DO NOT hardcode constructor values.
             - The constructor MUST accept 3 parameters: `string memory _name`, `string memory _symbol`, and `uint256 _initialSupply`.
-            - Use `_mint(msg.sender, _initialSupply * 10 ** decimals());`
-            - Example constructor that u should always follow and add no other params other than these three below AND AVOID ADDING (msg.sender,) COMMA IN Ownable(msg.sender) :
-            ```solidity
-            constructor(string memory _name, string memory _symbol, uint256 _initialSupply)
-                ERC20(_name, _symbol)
-                Ownable(msg.sender)
-            {
-                _mint(msg.sender, _initialSupply * 10**decimals());
-            }
+            - Use `_mint(msg.sender _initialSupply * 10 ** decimals());`
+            
 
 
 

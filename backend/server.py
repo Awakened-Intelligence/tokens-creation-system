@@ -12,7 +12,14 @@ from routes.token_routes import token_bp
 
 
 app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
-CORS(app, resources={r"/*": {"origins": "*", "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}})
+CORS(app, resources={
+    r"/*": {
+        "origins": ["http://localhost:3000", "https://*.replit.dev", "http://0.0.0.0:5000", "http://127.0.0.1:5000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Origin"],
+        "supports_credentials": True
+    }
+})
 
 app.config.from_object(Config)
 jwt = JWTManager(app)

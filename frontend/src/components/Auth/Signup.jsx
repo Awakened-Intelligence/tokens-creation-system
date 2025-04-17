@@ -21,7 +21,11 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${config.API_BASE_URL}/auth/signup`, formData);
+      const response = await axios.post(`${config.API_BASE_URL}/auth/signup`, formData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       toast.success(response.data.message || " Sign-up successful!");
       setTimeout(() => navigate('/signin'), 2000);
     } catch (error) {

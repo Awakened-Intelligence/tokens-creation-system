@@ -12,7 +12,7 @@ from routes.token_routes import token_bp
 
 
 app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
 app.config.from_object(Config)
 jwt = JWTManager(app)
@@ -42,3 +42,4 @@ def serve(path):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+

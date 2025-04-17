@@ -10,15 +10,29 @@ auth_service = AuthService()
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
-    data = request.json
-    response = auth_service.register_user(data)
-    return jsonify(response), 201 if response['success'] else 400
+    try:
+        data = request.json
+        if not data or not all(key in data for key in ['username', 'email', 'password']):
+            return jsonify({'success': False, 'message': 'Missing required fields'}), 400
+            
+        response = auth_service.register_user(data)
+        return jsonify(response), 201 if response['success'] else 400
+    except Exception as e:
+        print("Signup error:", str(e))
+        return jsonify({'success': False, 'message': 'Server error during signup'}), 500
 
 @auth_bp.route('/signin', methods=['POST'])
 def signin():
-    data = request.json
-    response = auth_service.login_user(data)
-    return jsonify(response), 200 if response['success'] else 401
+    try:
+        data = request.json
+        if not data or not all(key in data for key in ['email', 'password']):
+            return jsonify({'success': False, 'message': 'Missing email or password'}), 400
+            
+        response = auth_service.login_user(data)
+        return jsonify(response), 200 if response['success'] else 401
+    except Exception as e:
+        print("Signin error:", str(e))
+        return jsonify({'success': False, 'message': 'Server error during signin'}), 500
 
 @auth_bp.route('/verify-email/<token>', methods=['GET'])
 def verify_email(token):

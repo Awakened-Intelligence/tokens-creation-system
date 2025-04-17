@@ -1,8 +1,8 @@
 
 const config = {
     API_BASE_URL: process.env.NODE_ENV === 'production' 
-        ? window.location.origin
-        : 'https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev'
+        ? window.location.origin  // In production, use the same origin
+        : 'http://0.0.0.0:5000'  // In development, connect to Flask backend
 };
 
 export default config;

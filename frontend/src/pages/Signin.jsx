@@ -1,6 +1,6 @@
 import React from 'react';
 import SignIn from '../components/Auth/Signin';
-import coinImage from '../assets/coin.png';
+// import coinImage from '../assets/coin.png';
 
 const SignInPage = () => {
   return (

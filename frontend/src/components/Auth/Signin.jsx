@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom'; 
 import config from "../../config";
 import axios from 'axios';
-import { toast } from 'react-toastify'; // Import React Toastify
+import { toast } from 'react-toastify'; 
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });

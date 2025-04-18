@@ -16,9 +16,23 @@ code {
     monospace;
 }
 
+/* Custom styles */
+.btn {
+  @apply px-4 py-2 font-bold text-white bg-black rounded-lg hover:bg-white hover:text-black transition-all duration-300;
+}
 
+.typewriter {
+  @apply inline-block overflow-hidden whitespace-nowrap w-0 animate-typing;
+}
 
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
 
+.animate-typing {
+  animation: typing 3.5s steps(30, end) forwards;
+}
 
 /* From Uiverse.io by Admin12121 */ 
 .loader {
@@ -46,7 +60,7 @@ code {
   position: absolute;
   right: 32%;
   bottom: -11px;
-/* change the back groung color on switching from light to dark mood */
+  /* change the back groung color on switching from light to dark mood */
   /* background: #e8e8e8; */
   transform: translateZ(200px) rotate(var(--r));
   -webkit-animation: mask var(--duration) linear forwards infinite;
@@ -805,9 +819,3 @@ code {
     opacity: 1;
   }
 }
-
-
-
-
-
-

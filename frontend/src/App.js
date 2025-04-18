@@ -1,4 +1,6 @@
 import React from "react";
+import './App.css';
+import './index.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/homepage"; // Import Home Page
 import { TokenProvider } from "./context/TokenContext"; 

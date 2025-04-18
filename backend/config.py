@@ -1,16 +1,3 @@
-# import os
-# from dotenv import load_dotenv
-
-# # Load environment variables from .env
-# load_dotenv()
-
-# class Config:
-#     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-#     API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:5000")
-    
-#     # Toggle between GPT-3.5 & GPT-4 easily
-#     USE_GPT4 = os.getenv("USE_GPT4", "False").lower() == "true"
-
 import os
 from web3 import Web3
 from dotenv import load_dotenv

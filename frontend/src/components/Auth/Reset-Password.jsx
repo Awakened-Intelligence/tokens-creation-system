@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import config from "../../config";
@@ -22,39 +23,41 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 mt-60 shadow-2xl rounded-lg">
-      <h2 className="text-2xl font-bold text-center mb-4 text-blue-600">
-        Reset Password
-      </h2>
-  
-      <form onSubmit={handleSubmit}>
-        <input
-          type="password"
-          placeholder="New Password"
-          className="w-full p-3 mb-3 border rounded pr-10 shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl"
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-  
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-3 rounded-md text-lg transition-all duration-500 transform hover:bg-gradient-to-r hover:from-blue-500 hover:to-green-700 hover:scale-105 shadow-lg hover:shadow-xl"
-        >
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-blue-500 flex justify-center items-center">
+      <div className="max-w-md w-full mx-auto bg-white/20 backdrop-blur-md p-6 shadow-2xl rounded-lg">
+        <h2 className="text-2xl font-bold text-center mb-4 text-white">
           Reset Password
-        </button>
-      </form>
+        </h2>
   
-      {message && <p className="text-center mt-3 text-green-500">{message}</p>}
+        <form onSubmit={handleSubmit}>
+          <input
+            type="password"
+            placeholder="New Password"
+            className="w-full p-3 mb-3 border rounded pr-10 bg-white/10 backdrop-blur-sm text-white placeholder-white/70"
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
   
-      {/* Sign In Link After Successful Reset */}
-      {message && message.includes("successfully") && (
-        <p className="text-center mt-3 text-gray-600">
-          <Link to="/signin" className="text-blue-500 hover:underline">
-            Go to Sign In
-          </Link>
-        </p>
-      )}
+          <button
+            type="submit"
+            className="w-full bg-blue-500/80 text-white p-3 rounded-md text-lg transition-all duration-500 transform hover:bg-blue-600/80 hover:scale-105 shadow-lg hover:shadow-xl"
+          >
+            Reset Password
+          </button>
+        </form>
+  
+        {message && <p className="text-center mt-3 text-white">{message}</p>}
+  
+        {message && message.includes("successfully") && (
+          <p className="text-center mt-3 text-white/80">
+            <Link to="/signin" className="text-white hover:underline">
+              Go to Sign In
+            </Link>
+          </p>
+        )}
+      </div>
     </div>
   );
 }
+
 export default ResetPassword;

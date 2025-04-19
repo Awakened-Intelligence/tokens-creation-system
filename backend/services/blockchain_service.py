@@ -19,7 +19,7 @@ load_dotenv()
 
 INFURA_URL = os.getenv("INFURA_URL")
 INFURA_PRIVATE_KEY = os.getenv("INFURA_PRIVATE_KEY")
-LINEASCAN_API_KEY = os.getenv("LINEASCAN_API_KEY")
+ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")
 CHAIN_ID = os.getenv("CHAIN_ID", "5")  # Default to Goerli
 
 install_solc("0.8.20")  # Ensure correct Solidity version
@@ -129,9 +129,21 @@ def flatten_contract():
         while len(reordered_code) > 2 and reordered_code[2].strip() == "":
             del reordered_code[2]
 
-        # ✅ Step 5: Write the cleaned code back to the file
+         # 6️⃣ **Collapse stray commas** in initializer lists
+        code_str = "".join(reordered_code)
+        # Specific fix for Ownable(msg.sender, )
+        code_str = re.sub(
+            r'(\bOwnable\s*\(\s*msg\.sender)\s*,\s*\)',
+            r'\1)',
+            code_str
+        )
+        # Generic catch-all: any ", )" -> ")"
+        code_str = re.sub(r',\s*\)', ')', code_str)
+        print("✅ comma cleaned successfully!")
+
+        # 7️⃣ Write the cleaned + comma‑fixed code back
         with open(flattened_path, "w") as f:
-            f.writelines(reordered_code)
+            f.write(code_str)
 
         print("✅ Flattening completed and cleaned successfully!")
 
@@ -229,7 +241,7 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
 
         # ✅ Fix missing `Ownable(msg.sender)` in constructor if needed
         if "Ownable(" in flattened_code and "Ownable(msg.sender)" not in flattened_code:
-            flattened_code = flattened_code.replace("Ownable(", "Ownable(msg.sender, ") 
+            flattened_code = flattened_code.replace("Ownable(", "Ownable(msg.sender") 
 
         with open(flattened_contract_path, "w") as f:
             f.write(flattened_code)
@@ -393,7 +405,7 @@ def verify_contract(contract_address, flattened_contract_path, deployment_byteco
 
         # **Step 7: Send Verification Request**
         verification_payload = {
-            "apikey": LINEASCAN_API_KEY,
+            "apikey": ETHERSCAN_API_KEY,
             "module": "contract",
             "action": "verifysourcecode",
             "contractaddress": contract_address,
@@ -408,7 +420,8 @@ def verify_contract(contract_address, flattened_contract_path, deployment_byteco
         }
              
 
-        response = requests.post("https://api-sepolia.lineascan.build/api", data=verification_payload)
+        # response = requests.post("https://api-sepolia.lineascan.build/api", data=verification_payload)
+        response = requests.post("https://api.etherscan.io/api", data=verification_payload)
         response_json = response.json()
         print("🛠 Verification Response:", response_json)
 

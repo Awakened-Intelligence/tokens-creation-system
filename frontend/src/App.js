@@ -1,4 +1,6 @@
 import React from "react";
+import './App.css';
+import './index.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/homepage"; // Import Home Page
 import { TokenProvider } from "./context/TokenContext"; 
@@ -12,7 +14,7 @@ import ResetPassword from './components/Auth/Reset-Password';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import ConnectWallet from "./pages/ConnectWallet";
 import VerificationFailed from "./pages/VerificationFailed";
-import bgImage from './assets/coin.png';
+import bgImage from './assets/coin1.jpg';
 
 
 function App() {

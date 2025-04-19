@@ -1,524 +1,411 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import config from "../config";
-import { ethers } from "ethers";
+import { BrowserProvider } from "ethers";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function CreateToken() {
   const [tokenName, setTokenName] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("");
   const [totalSupply, setTotalSupply] = useState("");
-  const [decimals, setDecimals] = useState(0);
+  const [decimals, setDecimals] = useState("");
   const [network, setNetwork] = useState("Ethereum");
-  const [burnRate, setBurnRate] = useState(0);
+  const [burnRate, setBurnRate] = useState("");
   const [staking, setStaking] = useState(false);
   const [mintable, setMintable] = useState(false);
   const [status, setStatus] = useState("");
   const [solidityCode, setSolidityCode] = useState(""); // New state for Solidity code
-  const [transactionHash, setTransactionHash] = useState(""); // Store transaction hash after deployment
+  const [transactionHash, setTransactionHash] = useState("");
+  const [deploymentDetails, setDeploymentDetails] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
 
-  // Step 1: Call GPT-4 to Generate Solidity Code
+  // Load from sessionStorage when component mounts
+  useEffect(() => {
+    const code = sessionStorage.getItem("generatedCode");
+    if (code) {
+      setSolidityCode(code);
+    }
+  }, []);
+
+  // Clear on refresh only
+  useEffect(() => {
+    const isRefresh = performance.getEntriesByType("navigation")[0].type === "reload";
+    if (isRefresh) {
+      sessionStorage.removeItem("generatedCode");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (deploymentDetails) {
+      console.log("Deployment details updated:", deploymentDetails);
+    }
+  }, [deploymentDetails]);
+
+  // Helper: Generate Smart Contract (GPT-4 route)
   const generateSmartContract = async () => {
+    const walletAddress = localStorage.getItem("walletAddress");
+
+    if (!walletAddress) {
+      toast.error("Please connect your MetaMask wallet before generating the contract.");
+      return;
+    }
+    if (!tokenName || !tokenSymbol || !totalSupply || !decimals) {
+      toast.error("Please fill in all required fields before generating the contract.");
+      return;
+    }
     try {
-      setIsLoading(true); //  Show loader
-      setSolidityCode(""); //  Clear old code before generating a new one
-        const payload = {
-            token_name: tokenName,
-            token_symbol: tokenSymbol,
-            total_supply: totalSupply,
-            decimals: decimals,
-            network: network,
-            burn_rate: parseFloat(burnRate),
-            staking: staking,
-            mintable: mintable,
-        };
+      setIsLoading(true);
+      setSolidityCode("");
 
-        console.log(" Sending Payload to GPT Route:", payload); // Debugging
+      const payload = {
+        token_name: tokenName,
+        token_symbol: tokenSymbol,
+        total_supply: totalSupply,
+        decimals: decimals,
+        network: network,
+        burn_rate: parseFloat(burnRate),
+        staking: staking,
+        mintable: mintable,
+      };
 
-        const response = await axios.post(`${config.API_BASE_URL}/gpt/generate-smart-contract`, payload);
-        setSolidityCode(response.data.smart_contract_code);
-        setStatus("Smart contract generated successfully!");
+      const response = await axios.post(`${config.API_BASE_URL}/gpt/generate-smart-contract`, payload);
+      const code = response.data.smart_contract_code;
+      setSolidityCode(code);
+      sessionStorage.setItem("generatedCode", code);
 
+      toast.success("Smart contract generated successfully!");
     } catch (error) {
-        console.error(" Error generating contract:", error);
-        setStatus("Error generating contract.");
-    }finally {
-      setIsLoading(false);  //Hide loader after completion
+      console.error("Error generating contract:", error);
+      toast.error("Error generating smart contract!");
+    } finally {
+      setIsLoading(false);
     }
-};
+  };
 
-  // Step 2: Deploy Solidity Code to Blockchain
-  
-
-
-const deploySmartContract = async () => {
+  // Deploy Smart Contract
+  const deploySmartContract = async () => {
     if (!solidityCode) {
-        setStatus("❌ No Solidity code available. Generate a contract first.");
-        return;
+      toast.error("No Solidity code available. Generate a contract first.");
+      return;
     }
-
     const walletAddress = localStorage.getItem("walletAddress");
     if (!walletAddress) {
-        setStatus("❌ Wallet not connected! Please connect your MetaMask wallet.");
-        return;
+      toast.error("Wallet not connected! Please connect your MetaMask wallet.");
+      return;
     }
-
     try {
-        setStatus("🔄 Preparing deployment transaction...");
+      setStatus();
 
-        // ✅ Step 1: Request Unsigned Transaction from Backend
-        const response = await axios.post(
-            `${config.API_BASE_URL}/blockchain/get-deploy-tx`,
-            {
-                contract_code: solidityCode,
-                token_name: tokenName,
-                token_symbol: tokenSymbol,
-                total_supply: totalSupply,
-                wallet_address: walletAddress, // ✅ Send user's wallet address
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "application/json",
-                },
-            }
-        );
-
-        const { unsignedTx, contractAddress } = response.data;
-
-        // ✅ Step 2: Request MetaMask to Sign the Transaction
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const signedTx = await signer.signTransaction(unsignedTx);
-
-        setStatus("🚀 Sending signed transaction to the blockchain...");
-
-        // ✅ Step 3: Send the Signed Transaction to Backend for Broadcasting
-        const txResponse = await axios.post(
-            `${config.API_BASE_URL}/blockchain/send-signed-tx`,
-            { signed_tx: signedTx },
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "application/json",
-                },
-            }
-        );
-
-        const { transaction_hash } = txResponse.data;
-
-        setTransactionHash(transaction_hash);
-        setStatus(`✅ Token successfully deployed! TX Hash: ${transaction_hash}`);
-
-        // ✅ Step 4: Save Token Details in Database
-        saveTokenDetails(transaction_hash, contractAddress);
-
-    } catch (error) {
-        console.error("❌ Error during deployment:", error);
-        setStatus("❌ Deployment failed.");
-    }
-};
-
-
-
-  // Step 3: Store Token Details in Database
-  const saveTokenDetails = async (txHash) => {
-    try {
-        const token = localStorage.getItem("token");
-        const userId = localStorage.getItem("user_id");
-
-        if (!token || !userId) {
-            setStatus("Authorization token or user ID missing. Please log in.");
-            return;
+      // Request unsigned transaction from backend
+      const response = await axios.post(
+        `${config.API_BASE_URL}/blockchain/get-deploy-tx`,
+        {
+          contract_code: solidityCode,
+          token_name: tokenName,
+          token_symbol: tokenSymbol,
+          total_supply: totalSupply,
+          wallet_address: walletAddress,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
         }
+      );
+      const { unsignedTx, bytecode, flattened_contract_path } = response.data;
 
-        await axios.post(`${config.API_BASE_URL}/tokens/create`, {
-            user_id: userId, 
-            token_name: tokenName,
-            token_symbol: tokenSymbol,
-            total_supply: totalSupply,
-            decimals: decimals,
-            network: network,
-            transaction_hash: txHash,
-        }, {
+      const details = {
+        flattened_contract_path,
+        deployment_bytecode: bytecode,
+        token_name: tokenName,
+        token_symbol: tokenSymbol,
+        total_supply: totalSupply,
+      };
+      setDeploymentDetails(details);
+
+      // Sign and send transaction with MetaMask
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const tx = {
+        data: unsignedTx.data,
+        gasLimit: unsignedTx.gas,
+      };
+
+      const txResponse = await signer.sendTransaction(tx);
+      toast.warning("Transaction sent, waiting for confirmation...");
+      const txReceipt = await txResponse.wait();
+
+      const contractAddress = txReceipt.contractAddress;
+      const transactionHash = txReceipt.hash;  // or 'txReceipt.transactionHash' in some versions
+      setTransactionHash(transactionHash);
+
+      toast.success(`Token successfully deployed! TX Hash: ${transactionHash}`);
+      console.log("Transaction receipt:", txReceipt);
+      console.log("Contract address:", contractAddress);
+
+      // Clean up generated code from session & state
+      sessionStorage.removeItem("generatedCode");
+      setSolidityCode("");
+
+      // Verification step
+      if (details) {
+        const verifyResponse = await axios.post(
+          `${config.API_BASE_URL}/blockchain/verify-contract`,
+          {
+            contract_address: contractAddress,
+            flattened_contract_path: details.flattened_contract_path,
+            deployment_bytecode: details.deployment_bytecode,
+            token_name: details.token_name,
+            token_symbol: details.token_symbol,
+            total_supply: details.total_supply,
+          },
+          {
             headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
             },
-        });
+          }
+        );
+        console.log("Verification response:", verifyResponse.data);
+        toast.success("Verification completed!");
+      } else {
+        console.error("Deployment details missing for verification.");
+      }
 
-        setStatus("Token details stored successfully!");
-
+      // Store token details in DB
+      await saveTokenDetails(transactionHash, contractAddress);
     } catch (error) {
-        setStatus("Error storing token details.");
-        console.error(error);
+      console.error("Error during deployment:", error);
+      toast.error("Deployment failed.");
     }
-};
-  
-               
+  };
+
+  // Store token details in the database
+  const saveTokenDetails = async (txHash, contractAddress) => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("user_id");
+
+      if (!token || !userId) {
+        toast.warning("Authorization token or user ID missing. Please log in.");
+        return;
+      }
+
+      await axios.post(
+        `${config.API_BASE_URL}/tokens/create`,
+        {
+          user_id: userId,
+          token_name: tokenName,
+          token_symbol: tokenSymbol,
+          total_supply: totalSupply,
+          decimals: decimals,
+          network: network,
+          transaction_hash: txHash,
+          contract_address: contractAddress,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setStatus("Token details stored successfully!");
+    } catch (error) {
+      setStatus("Error storing token details.");
+      console.error(error);
+    }
+  };
+
   return (
-    <div>
-  {isLoading && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      {/* <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div> */}
-      
-<div class="loader">
-  <div class="box box0">
-    <div></div>
-  </div>
-  <div class="box box1">
-    <div></div>
-  </div>
-  <div class="box box2">
-    <div></div>
-  </div>
-  <div class="box box3">
-    <div></div>
-  </div>
-  <div class="box box4">
-    <div></div>
-  </div>
-  <div class="box box5">
-    <div></div>
-  </div>
-  <div class="box box6">
-    <div></div>
-  </div>
-  <div class="box box7">
-    <div></div>
-  </div>
-  <div class="ground">
-    <div></div>
-  </div>
-</div>
-    </div>
-  )}
-   
-      
+    <div className="relative min-h-screen w-full overflow-x-hidden">
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="loader">
+            <div className="box box0"><div></div></div>
+            <div className="box box1"><div></div></div>
+            <div className="box box2"><div></div></div>
+            <div className="box box3"><div></div></div>
+            <div className="box box4"><div></div></div>
+            <div className="box box5"><div></div></div>
+            <div className="box box6"><div></div></div>
+            <div className="box box7"><div></div></div>
+            <div className="ground"><div></div></div>
+          </div>
+        </div>
+      )}
+
+      {/* Fixed Navbar */}
       <Navbar />
-      <div className="mt-40 max-w-3xl mx-auto p-6 bg-white shadow-2xl rounded-lg">
-        <h2 className="text-2xl font-bold text-center text-blue-600">Create Your Token</h2>
-        
-        {/* Token Input Fields */}
-        <div className="mt-8 space-y-4">
-  <input
-    type="text"
-    placeholder="Token Name"
-    value={tokenName}
-    onChange={(e) => setTokenName(e.target.value)}
-    className="w-full p-3 border rounded-md shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl"
-    required
-  />
-  <input
-    type="text"
-    placeholder="Token Symbol"
-    value={tokenSymbol}
-    onChange={(e) => setTokenSymbol(e.target.value)}
-    className="w-full p-3 border rounded-md shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl"
-    required
-  />
-  <input
-    type="number"
-    placeholder="Total Supply"
-    value={totalSupply}
-    onChange={(e) => setTotalSupply(e.target.value)}
-    className="w-full p-3 border rounded-md shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl"
-    required
-  />
-  <input
-    type="number"
-    placeholder="Decimals"
-    value={decimals}
-    onChange={(e) => setDecimals(e.target.value)}
-    className="w-full p-3 border rounded-md shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl"
-    required
-  />
 
-  {/* Blockchain Network Selection */}
-  <select
-    value={network}
-    onChange={(e) => setNetwork(e.target.value)}
-    className="w-full p-3 border rounded-md shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl"
-  >
-    <option value="Ethereum">Ethereum (ERC-20)</option>
-    <option value="BEP-20">Binance Smart Chain (BEP-20)</option>
-    <option value="Solana">Solana (SPL)</option>
-  </select>
+      {/* Toast Notifications */}
+      <ToastContainer position="top-right" autoClose={3000} />
 
-  {/* Additional Features */}
-  <div className="flex items-center space-x-4">
-    <input
-      type="number"
-      placeholder="Burn Rate (%)"
-      value={burnRate}
-      onChange={(e) => setBurnRate(e.target.value)}
-      className="p-3 border rounded-md w-1/2 shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl"
-    />
-    <label className="flex items-center space-x-2">
-      <input
-        type="checkbox"
-        checked={staking}
-        onChange={(e) => setStaking(e.target.checked)}
-        className="transform transition-all duration-300 hover:scale-110"
-      />
-      <span>Enable Staking</span>
-    </label>
-    <label className="flex items-center space-x-2">
-      <input
-        type="checkbox"
-        checked={mintable}
-        onChange={(e) => setMintable(e.target.checked)}
-        className="transform transition-all duration-300 hover:scale-110"
-      />
-      <span>Mintable</span>
-    </label>
-  </div>
+      {/* Main Content Container (offset below navbar) */}
+      <div className="relative z-10 pt-20 px-4">
+        <div className="flex flex-col items-center">
+          {/* Form Container */}
+          <div className="mb-20 space-y-6 backdrop-blur-lg bg-white/10 shadow-2xl rounded-3xl p-8 max-w-3xl w-full mx-auto border border-white/20">
+            <h2 className="text-3xl font-semibold text-white text-center">
+              Create Your Token
+            </h2>
 
-  {/* Buttons */}
-  <div className="flex justify-between">
-    <button
-      onClick={generateSmartContract}
-      className="bg-green-500 text-white p-3 text-white rounded-md text-lg transition-all duration-500 transform hover:bg-gradient-to-r hover:from-green-500 hover:to-blue-700 hover:scale-105 shadow-lg hover:shadow-xl"
-    >
-      Generate Contract
-    </button>
-    <button
-      onClick={deploySmartContract}
-      className="bg-blue-500 text-white p-3 text-white rounded-md text-lg transition-all duration-500 transform hover:bg-gradient-to-r hover:from-blue-500 hover:to-green-700 hover:scale-105 shadow-lg hover:shadow-xl"
-    >
-      Deploy Token
-    </button>
-  </div>
+            {/* Token Name */}
+            <div className="flex justify-center">
+              <input
+                type="text"
+                placeholder="Token Name"
+                value={tokenName}
+                onChange={(e) => setTokenName(e.target.value)}
+                className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md bg-white bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
 
-  {/* Display Solidity Code */}
-  {solidityCode && (
-    <div className="mt-4 p-3 border rounded-md bg-gray-100 text-gray-700 overflow-auto max-w-full break-words shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl">
-      <strong>Generated Solidity Code:</strong>
-      <pre className="whitespace-pre-wrap break-words text-sm bg-white p-2 rounded-md">
-        {solidityCode || "No contract generated yet."}
-      </pre>
-    </div>
-  )}
+            {/* Token Symbol */}
+            <div className="flex justify-center">
+              <input
+                type="text"
+                placeholder="Token Symbol"
+                value={tokenSymbol}
+                onChange={(e) => setTokenSymbol(e.target.value)}
+                className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
+                required
+              />
+            </div>
 
-  
-  {status && <p className="text-center text-green-500 mt-4">{status}</p>}
+            {/* Total Supply */}
+            <div className="flex justify-center">
+              <input
+                type="number"
+                placeholder="Total Supply"
+                value={totalSupply}
+                onChange={(e) => setTotalSupply(e.target.value)}
+                className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
+                required
+              />
+            </div>
 
-  
-  {transactionHash && (
-    <div className="mt-4 p-2 bg-gray-100 border rounded-md shadow-lg transform transition-all duration-300 hover:scale-10 hover:shadow-2xl">
-      <h3 className="text-lg font-semibold">Transaction Hash:</h3>
-      <pre className="text-sm text-gray-700">{transactionHash}</pre>
-    </div>
-  )}
-</div>
+            {/* Decimals */}
+            <div className="flex justify-center">
+              <input
+                type="number"
+                placeholder="Decimals (0-18)"
+                value={decimals}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (value >= 0 && value <= 18) {
+                    setDecimals(value);
+                  }
+                }}
+                min="0"
+                max="18"
+                className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
+                required
+              />
+            </div>
 
+            {/* Network (disabled = Ethereum) */}
+            <div className="flex justify-center">
+              <select
+                value={network}
+                onChange={(e) => setNetwork(e.target.value)}
+                className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
+                disabled
+              >
+                <option value="Ethereum">Ethereum (ERC-20)</option>
+                {/* <option value="BEP-20">Binance Smart Chain (BEP-20)</option> */}
+                {/* <option value="Solana">Solana (SPL)</option> */}
+              </select>
+            </div>
+
+            {/* Additional Features */}
+            <div className="flex flex-col items-center space-y-4">
+              <input
+                type="number"
+                placeholder="Burn Rate (0-10%)"
+                value={burnRate}
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  if (value >= 0 && value <= 10) {
+                    setBurnRate(value);
+                  }
+                }}
+                min="0"
+                max="10"
+                step="0.1"
+                className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
+              />
+
+              <div className="flex items-center space-x-6">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={staking}
+                    onChange={(e) => setStaking(e.target.checked)}
+                    className="transform transition-all duration-300"
+                  />
+                  <span className="text-white">Enable Staking</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={mintable}
+                    onChange={(e) => setMintable(e.target.checked)}
+                    className="transform transition-all duration-300"
+                  />
+                  <span className="text-white">Mintable</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-4 sm:space-y-0 justify-center items-center">
+              <button
+                onClick={generateSmartContract}
+                className="btn"
+                style={{ background: "linear-gradient(45deg, rgba(147, 51, 234, 0.9), rgba(59, 130, 246, 0.9))" }}
+              >
+                Generate Contract
+              </button>
+              <button
+                onClick={deploySmartContract}
+                className="btn"
+                style={{ background: "linear-gradient(45deg, rgba(147, 51, 234, 0.9), rgba(59, 130, 246, 0.9))" }}
+              >
+                Deploy Token
+              </button>
+            </div>
+
+            {/* Display Solidity Code */}
+            {solidityCode && (
+              <div className="mt-6 p-4 border rounded-xl bg-gray-100 text-gray-700 overflow-auto max-w-full break-words shadow-md">
+                <strong>Generated Solidity Code:</strong>
+                <pre className="whitespace-pre-wrap break-words text-sm bg-white p-4 rounded-xl">
+                  {solidityCode || "No contract generated yet."}
+                </pre>
+              </div>
+            )}
+
+            {/* Status & Transaction Hash */}
+            {status && (
+              <p className="text-center text-green-500 mt-6">{status}</p>
+            )}
+            {transactionHash && (
+              <div className="mt-6 p-4 bg-gray-100 border rounded-xl shadow-md">
+                <h3 className="text-lg font-semibold">Transaction Hash:</h3>
+                <pre className="text-sm text-gray-700">{transactionHash}</pre>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
-    
   );
 }
 
 export default CreateToken;
-
-// import React, { useState } from "react";
-// import Navbar from "../components/navbar";
-// import config from "../config";
-// import axios from "axios";
-// import { useToken } from "../context/TokenContext"; // Import Token Context
-
-// function CreateToken() {
-//   const { tokenData, setTokenData } = useToken(); // Use global state from context
-//   const [status, setStatus] = useState("");
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   // Helper function to update token data
-//   const updateTokenData = (key, value) => {
-//     setTokenData((prev) => ({ ...prev, [key]: value }));
-//   };
-
-//   // Step 1: Generate Smart Contract
-//   const generateSmartContract = async () => {
-//     try {
-//       setIsLoading(true);
-//       updateTokenData("solidityCode", "");
-//       const payload = {
-//         token_name: tokenData.tokenName,
-//         token_symbol: tokenData.tokenSymbol,
-//         total_supply: tokenData.totalSupply,
-//         decimals: tokenData.decimals,
-//         network: tokenData.network,
-//         burn_rate: parseFloat(tokenData.burnRate),
-//         staking: tokenData.staking,
-//         mintable: tokenData.mintable,
-//       };
-
-//       const response = await axios.post(
-//         `${config.API_BASE_URL}/gpt/generate-smart-contract`,
-//         payload
-//       );
-
-//       updateTokenData("solidityCode", response.data.smart_contract_code);
-//       setStatus("✅ Smart contract generated successfully!");
-//     } catch (error) {
-//       console.error("❌ Error generating contract:", error);
-//       setStatus("❌ Error generating contract.");
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   // Step 2: Deploy Smart Contract
-//   const deploySmartContract = async () => {
-//     if (!tokenData.solidityCode) {
-//       setStatus("⚠️ No Solidity code available. Generate a contract first.");
-//       return;
-//     }
-
-//     try {
-//       setStatus("🚀 Deploying token...");
-
-//       const response = await axios.post(
-//         `${config.API_BASE_URL}/blockchain/deploy`,
-//         { contract_code: tokenData.solidityCode },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${localStorage.getItem("token")}`,
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-
-//       updateTokenData("transactionHash", response.data.transaction_hash);
-//       setStatus("🎉 Token successfully deployed!");
-//     } catch (error) {
-//       console.error(error);
-//       setStatus("❌ Error deploying contract.");
-//     }
-//   };
-
-//   // Step 3: Refresh Data (Resets Form)
-//   const refreshData = () => {
-//     setTokenData({
-//       tokenName: "",
-//       tokenSymbol: "",
-//       totalSupply: "",
-//       decimals: 0,
-//       network: "Ethereum",
-//       burnRate: 0,
-//       staking: false,
-//       mintable: false,
-//       solidityCode: "",
-//       transactionHash: "",
-//     });
-//     setStatus("✅ Form reset successfully!");
-//   };
-
-//   return (
-//     <div>
-//       <Navbar />
-//       <div className="mt-40 max-w-3xl mx-auto p-6 bg-white shadow-2xl rounded-lg">
-//         <h2 className="text-2xl font-bold text-center text-blue-600">
-//           Create Your Token
-//         </h2>
-
-//         {/* Refresh Button */}
-//         <div className="flex justify-end mb-3">
-//           <button
-//             onClick={refreshData}
-//             className="bg-red-500 text-white p-2 rounded-md text-sm transition-all duration-300 transform hover:scale-105 hover:bg-red-700"
-//           >
-//             Refresh Data
-//           </button>
-//         </div>
-
-//         {/* Token Input Fields */}
-//         <div className="mt-8 space-y-4">
-//           <input
-//             type="text"
-//             placeholder="Token Name"
-//             value={tokenData.tokenName}
-//             onChange={(e) => updateTokenData("tokenName", e.target.value)}
-//             className="w-full p-3 border rounded-md shadow-lg"
-//             required
-//           />
-//           <input
-//             type="text"
-//             placeholder="Token Symbol"
-//             value={tokenData.tokenSymbol}
-//             onChange={(e) => updateTokenData("tokenSymbol", e.target.value)}
-//             className="w-full p-3 border rounded-md shadow-lg"
-//             required
-//           />
-//           <input
-//             type="number"
-//             placeholder="Total Supply"
-//             value={tokenData.totalSupply}
-//             onChange={(e) => updateTokenData("totalSupply", e.target.value)}
-//             className="w-full p-3 border rounded-md shadow-lg"
-//             required
-//           />
-//           <input
-//             type="number"
-//             placeholder="Decimals"
-//             value={tokenData.decimals}
-//             onChange={(e) => updateTokenData("decimals", e.target.value)}
-//             className="w-full p-3 border rounded-md shadow-lg"
-//             required
-//           />
-
-//           {/* Blockchain Network Selection */}
-//           <select
-//             value={tokenData.network}
-//             onChange={(e) => updateTokenData("network", e.target.value)}
-//             className="w-full p-3 border rounded-md shadow-lg"
-//           >
-//             <option value="Ethereum">Ethereum (ERC-20)</option>
-//             <option value="BEP-20">Binance Smart Chain (BEP-20)</option>
-//             <option value="Solana">Solana (SPL)</option>
-//           </select>
-
-//           {/* Additional Features */}
-//           <div className="flex items-center space-x-4">
-//             <input
-//               type="number"
-//               placeholder="Burn Rate (%)"
-//               value={tokenData.burnRate}
-//               onChange={(e) => updateTokenData("burnRate", e.target.value)}
-//               className="p-3 border rounded-md w-1/2 shadow-lg"
-//             />
-//             <label className="flex items-center space-x-2">
-//               <input
-//                 type="checkbox"
-//                 checked={tokenData.staking}
-//                 onChange={(e) => updateTokenData("staking", e.target.checked)}
-//               />
-//               <span>Enable Staking</span>
-//             </label>
-//             <label className="flex items-center space-x-2">
-//               <input
-//                 type="checkbox"
-//                 checked={tokenData.mintable}
-//                 onChange={(e) => updateTokenData("mintable", e.target.checked)}
-//               />
-//               <span>Mintable</span>
-//             </label>
-//           </div>
-
-//           {/* Buttons */}
-//           <div className="flex justify-between">
-//             <button onClick={generateSmartContract} className="bg-green-500 text-white p-3 rounded-md">
-//               Generate Contract
-//             </button>
-//             <button onClick={deploySmartContract} className="bg-blue-500 text-white p-3 rounded-md">
-//               Deploy Token
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default CreateToken;

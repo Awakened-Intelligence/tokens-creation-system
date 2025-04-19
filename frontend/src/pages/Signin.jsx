@@ -1,13 +1,12 @@
 import React from 'react';
 import SignIn from '../components/Auth/Signin';
-import coinImage from '../assets/coin.png';
+// import coinImage from '../assets/coin.png';
 
 const SignInPage = () => {
   return (
-    <div className="bg-cover bg-center" style={{ backgroundImage: `url(${coinImage})` }}>
     <div className="min-h-screen flex items-center justify-center">
       <SignIn />
-    </div>
+    {/* </div> */}
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import React from "react";
 import Navbar from "../components/navbar";
+import bgImage from '../assets/coin1.jpg';
 
 const ICOPage = () => {
   return (
-    <div >
+    <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
         <Navbar />
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen text-white p-4">
     
       <h1 className="text-3xl font-bold mb-4">Participate in Our Token Sale</h1>
       <p className="text-lg mb-6">Buy tokens directly from our ICO/IDO launch.</p>

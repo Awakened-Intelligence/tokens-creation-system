@@ -13,23 +13,7 @@ function ConnectWallet() {
 
   useEffect(() => {
     const initializeWallet = async () => {
-      // Check for MetaMask on load and setup a listener for changes
-      const checkMetaMask = () => {
-        const isMetaMaskAvailable = !!window.ethereum?.isMetaMask;
-        setMetaMaskAvailable(isMetaMaskAvailable);
-        return isMetaMaskAvailable;
-      };
-
-      // Initial check
-      checkMetaMask();
-
-      // Set up interval to check for MetaMask
-      const metaMaskCheckInterval = setInterval(() => {
-        if (checkMetaMask()) {
-          clearInterval(metaMaskCheckInterval);
-        }
-      }, 1000);
-
+      setMetaMaskAvailable(!!window.ethereum?.isMetaMask);
       const savedWallet = localStorage.getItem("walletAddress");
       
       if (savedWallet && window.ethereum) {
@@ -39,19 +23,12 @@ function ConnectWallet() {
           setWalletAddress(savedWallet);
           setNetwork(network.name);
         } catch (err) {
-          if (err.message.includes('unpinned')) {
-            setError("Please pin the MetaMask extension and try again.");
-          } else {
-            console.error("Failed to restore wallet connection:", err);
-            localStorage.removeItem("walletAddress");
-            setWalletAddress("");
-            setNetwork("");
-          }
+          console.error("Failed to restore wallet connection:", err);
+          localStorage.removeItem("walletAddress");
+          setWalletAddress("");
+          setNetwork("");
         }
       }
-
-      // Cleanup interval on component unmount
-      return () => clearInterval(metaMaskCheckInterval);
     };
 
     initializeWallet();

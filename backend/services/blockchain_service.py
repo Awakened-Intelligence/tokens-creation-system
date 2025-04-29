@@ -229,7 +229,7 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
 
         # ✅ Fix missing `Ownable(msg.sender)` in constructor if needed
         if "Ownable(" in flattened_code and "Ownable(msg.sender)" not in flattened_code:
-            flattened_code = flattened_code.replace("Ownable(", "Ownable(msg.sender, ") 
+            flattened_code = flattened_code.replace("Ownable(", "Ownable(msg.sender ") 
 
         with open(flattened_contract_path, "w") as f:
             f.write(flattened_code)

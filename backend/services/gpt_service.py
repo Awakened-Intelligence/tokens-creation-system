@@ -173,6 +173,8 @@ def generate_smart_contract(token_data):
 
            2️⃣ **Ensure full compatibility with Solidity 0.8.20**:
            - **Use `_update()` instead of `_beforeTokenTransfer()`** for OpenZeppelin v5.2.0 compatibility.
+           - Override the **virtual** `_update(from, to, amount)` hook instead of `_beforeTokenTransfer()`.
+              - Do **not** override `_transfer()`—use `_update()` for burn/fee logic.
            - **Use `mapping(address => uint256)`, NOT `mapping(address account => uint256)`** to maintain backward compatibility.
            - **Correctly inherit `Ownable` and pass `msg.sender` as the initial owner**.
            - If the contract inherits Ownable, ensure the constructor calls Ownable(msg.sender).
@@ -183,6 +185,7 @@ def generate_smart_contract(token_data):
             With:
 
             - DO NOT hardcode constructor values.
+            **ALWAYS** generate this constructor — no matter what the flags are 'staking' or 'mintable':
             - The constructor MUST accept 3 parameters: `string memory _name`, `string memory _symbol`, and `uint256 _initialSupply`.
             - Use `_mint(msg.sender _initialSupply * 10 ** decimals());`
             

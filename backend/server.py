@@ -43,7 +43,7 @@ def test_db():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    if path != "" and os.path.exists("../frontend/build/" + path):
+    if path.startswith("static/"):
         return send_from_directory('../frontend/build', path)
     return send_from_directory('../frontend/build', 'index.html')
 if __name__ == "__main__":

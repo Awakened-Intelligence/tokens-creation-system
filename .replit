@@ -30,4 +30,4 @@ args = "cd frontend && npm start"
 [deployment]
 deploymentTarget = "cloudrun"
 run = ["sh", "-c", "cd backend && python server.py"]
-build = ["sh", "-c", "cd frontend && npm install && npm run build && cp -r build/* ../backend/static/"]
+build = ["sh", "-c", "cd frontend && npm install && npm run build"]

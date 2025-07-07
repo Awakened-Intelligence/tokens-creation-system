@@ -25,6 +25,16 @@ CORS(
     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
+FRONTEND_URL = app.config["FRONTEND_URL"]
+
+# ⑤ apply CORS, restricting to that single origin
+CORS(
+    app,
+    origins=[FRONTEND_URL],
+    supports_credentials=True,
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"]
+)
 jwt = JWTManager(app)
 
 # Register Blueprints

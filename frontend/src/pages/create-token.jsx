@@ -160,6 +160,7 @@ function CreateToken() {
       toast.error("No Solidity code available. Generate a contract first.");
       return;
     }
+
     const walletAddress = localStorage.getItem("walletAddress");
     if (!walletAddress) {
       toast.error("Wallet not connected! Please connect your MetaMask wallet.");
@@ -167,6 +168,7 @@ function CreateToken() {
       toast.error("Wallet not connected! Please connect your MetaMask wallet.");
       return;
     }
+
     try {
       setStatus();
       setStatus();
@@ -291,6 +293,7 @@ function CreateToken() {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
               "Content-Type": "application/json",
             },
+
           }
         );
         console.log("Verification response:", verifyResponse.data);

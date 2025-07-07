@@ -17,10 +17,15 @@ from eth_abi import encode
 # Load environment variables
 load_dotenv()
 
-INFURA_URL = os.getenv("INFURA_URL")
-INFURA_PRIVATE_KEY = os.getenv("INFURA_PRIVATE_KEY")
+
+ETHEREUM_URL = os.getenv("ETHEREUM_URL")
+POLYGON_URL = os.getenv("POLYGON_URL")
+ETHEREUM_CHAIN_ID = os.getenv("ETHEREUM_CHAIN_ID", "1")  # Default to Goerli
+POLYGON_CHAIN_ID = os.getenv("POLYGON_CHAIN_ID", "137")  # Default to Polygon Mainnet
 ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")
-CHAIN_ID = os.getenv("CHAIN_ID", "5")  # Default to Goerli
+# INFURA_PRIVATE_KEY = os.getenv("INFURA_PRIVATE_KEY")
+# LINEASCAN_API_KEY = os.getenv("LINEASCAN_API_KEY")
+
 
 install_solc("0.8.20")  # Ensure correct Solidity version
 
@@ -31,23 +36,32 @@ except importlib.metadata.PackageNotFoundError:
     print("Warning: Could not detect installed web3 package version.")
     web3_version = "unknown"
 
-web3 = Web3(Web3.HTTPProvider(INFURA_URL))
+def get_web3_provider(network):
+    """Returns a Web3 provider based on the network type."""
+    if network == "Polygon":
+        api_url = POLYGON_URL  # Fetch Polygon URL
+        web3 = Web3(Web3.HTTPProvider(api_url))
 
-# web3.middleware_onion.inject(geth_poa_middleware, layer=0)
-try:
-    web3.middleware_onion.inject(
-        lambda w3: GethPOAMiddleware(w3),  # <-- 1) The callable
-        "poa",                             # <-- 2) The optional name
-        0                                  # <-- 3) The optional position
-    )
-    print("POA middleware injected successfully.")
-except Exception as e:
-    print("Warning: geth_poa_middleware could not be injected:", e)
+        # Inject POA middleware for Polygon
+        try:
+            web3.middleware_onion.inject(
+                lambda w3: GethPOAMiddleware(w3), "poa", 0
+            )
+            print("POA middleware injected successfully for Polygon.")
+        except Exception as e:
+            print("Warning: POA middleware could not be injected for Polygon:", e)
 
-if web3.is_connected():
-    print("✅ Connected to Ethereum Sepolia Testnet via Infura")
-else:
-    raise Exception("❌ Connection to Ethereum network failed")
+    else:
+        api_url = ETHEREUM_URL  # Default to Ethereum if not Polygon
+        web3 = Web3(Web3.HTTPProvider(api_url))
+
+    if web3.is_connected():
+        print(f"✅ Connected to {network} network via Infura/Polygon")
+    else:
+        raise Exception(f"❌ Connection to {network} network failed")
+
+    return web3
+
 
 
 # Auto-flatten contract for verification (not for deployment)
@@ -206,9 +220,16 @@ def encode_constructor_args( token_name, token_symbol, total_supply):
 
 
 # ✅ **DEPLOY CONTRACT FUNCTION WITH IMPROVEMENTS**
-def deploy_contract(solidity_code, token_name, token_symbol, total_supply, wallet_address):
+def deploy_contract(solidity_code, token_name, token_symbol, total_supply, wallet_address,network):
     try:
+        web3 = get_web3_provider(network)  # Get web3 provider based on network
+
         wallet_address = Web3.to_checksum_address(wallet_address)
+
+        if network == "Polygon":
+            target_chain_id = int(POLYGON_CHAIN_ID)   # e.g. 137
+        else:
+            target_chain_id = int(ETHEREUM_CHAIN_ID) # e.g. 1
 
         # ✅ **Step 1: Remove old flattened contract files before deployment**
         contracts_dir = "./@openzeppelin/contracts/"
@@ -241,7 +262,8 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
 
         # ✅ Fix missing `Ownable(msg.sender)` in constructor if needed
         if "Ownable(" in flattened_code and "Ownable(msg.sender)" not in flattened_code:
-            flattened_code = flattened_code.replace("Ownable(", "Ownable(msg.sender") 
+
+            flattened_code = flattened_code.replace("Ownable(", "Ownable(msg.sender ") 
 
         with open(flattened_contract_path, "w") as f:
             f.write(flattened_code)
@@ -324,13 +346,17 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
         built_txn = contract.constructor(token_name, token_symbol, int(total_supply)).build_transaction({
             # We do NOT specify 'from', 'nonce', or 'chainId' 
             # Let MetaMask fill those in
+            "from":    wallet_address,
+            "chainId": target_chain_id,
             "gas": 1500000  # or you can omit gas and let metamask estimate
         })
 
         # The only fields MetaMask really needs are `data` (and optionally `gas`)
         unsigned_tx = {
             "data": built_txn["data"],
-            "gas": built_txn["gas"]  # or rename to `gasLimit` in your frontend
+            "gas": built_txn["gas"],
+            "chainId": built_txn["chainId"],
+            "from":    built_txn["from"] # or rename to `gasLimit` in your frontend
         }
 
         return {
@@ -349,10 +375,21 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
   
 
 # ✅ **VERIFY CONTRACT WITH FLATTENED CODE**
-def verify_contract(contract_address, flattened_contract_path, deployment_bytecode, token_name, token_symbol, total_supply):
+def verify_contract(contract_address, flattened_contract_path, deployment_bytecode, token_name, token_symbol, total_supply,network):
     """Verifies contract on LineaScan using the flattened contract."""
-
     try:
+        # Select chain_id and Web3 provider URL dynamically based on the selected network
+        if network == "Polygon":
+            chain_id = POLYGON_CHAIN_ID  # Use Polygon's chain ID
+            
+        elif network == "Ethereum":
+            chain_id = ETHEREUM_CHAIN_ID  # Use Ethereum's chain ID
+             
+        else:
+            return {"error": f"Unknown network: {network}"}
+
+        print(f"🔍 Selected Network: {network}")
+        print(f"🔍 Selected Chain ID: {chain_id}")
         # **Step 1: Read Flattened Contract for Verification**
         if not os.path.exists(flattened_contract_path):
             raise Exception("❌ Flattened contract file not found!")
@@ -416,20 +453,36 @@ def verify_contract(contract_address, flattened_contract_path, deployment_byteco
             "evmVersion": "paris",
             "constructorArguments": encoded_args,
             "optimizationUsed": "1",
-            "runs": "200"
+            "runs": "200",
+            "chainid": chain_id
         }
-             
+        if network == "Polygon":
+            response = requests.post("https://api.etherscan.io/v2/api?chainid=137", data=verification_payload)
+        else:
+            response = requests.post("https://api.etherscan.io/v2/api?chainid=1", data=verification_payload)
 
-        # response = requests.post("https://api-sepolia.lineascan.build/api", data=verification_payload)
-        response = requests.post("https://api.etherscan.io/api", data=verification_payload)
+
         response_json = response.json()
         print("🛠 Verification Response:", response_json)
 
-        if "status" in response_json and response_json["status"] != "1":
-            print("❌ Verification Failed! Check response for errors.")
-            traceback.print_exc()  # Prints full error traceback
+        # Check the status of the verification
+        if response_json.get("status") != "1":
+            return {"error": "Verification failed!"}
 
-        return response_json
+        return response_json     
+
+        # response = requests.post("https://api-sepolia.lineascan.build/api", data=verification_payload)
+        # response = requests.post("https://api.etherscan.io/api", data=verification_payload)
+        # response = requests.post("https://api.etherscan.io/v2/api?chainid=1", data=verification_payload)
+        # response = requests.post("https://api.polygonscan.com/api", data=verification_payload)
+        # response_json = response.json()
+        # print("🛠 Verification Response:", response_json)
+
+        # if "status" in response_json and response_json["status"] != "1":
+        #     print("❌ Verification Failed! Check response for errors.")
+        #     traceback.print_exc()  # Prints full error traceback
+
+        # return response_json
 
     except Exception as e:
         print("❌ Verification process failed!")

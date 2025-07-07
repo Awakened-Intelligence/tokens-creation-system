@@ -1,0 +1,67 @@
+Access to XMLHttpRequest at 'https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev:5000/auth/signin' from origin 'https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+Explanation
+
+Understanding the problem
+The error message indicates a CORS (Cross-Origin Resource Sharing) issue. Your web application, running at origin https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev, is attempting to make an XMLHttpRequest to a different origin, https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev:5000. This is considered a cross-origin request, and browsers enforce CORS policies for security reasons.
+
+The error specifically states that the server at https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev:5000 did not include the Access-Control-Allow-Origin header in its response to the preflight request. A preflight request is automatically sent by the browser before the actual request to check if the server allows requests from the origin of your web application. The absence of this header signals to the browser that the server does not permit cross-origin requests from your application's origin, hence the request is blocked.
+
+How to verify
+You can verify this by inspecting the network tab in your browser's developer tools. Look at the response headers for the failed request to https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev:5000/auth/signin. You should not find the Access-Control-Allow-Origin header present.
+
+Suggested fix
+To resolve this, you need to configure the server at https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev:5000 to include the Access-Control-Allow-Origin header in its response. The value of this header should be set to either the specific origin of your web application (https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev) or a wildcard * to allow requests from any origin (use cautiously, especially for production environments).
+
+For example, if you are using Node.js with Express, you can add the following middleware:
+
+Code
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev"); // Or "*" for any origin
+  // other headers such as Access-Control-Allow-Headers can be configured here
+  next();
+});
+Use code snippets with caution
+
+Alternatively, if the server is running on Apache, you can add the following line to your .htaccess or virtual host configuration file:
+
+Code
+
+apache
+Header set Access-Control-Allow-Origin "https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev"
+Use code snippets with caution
+
+For Nginx:
+
+Code
+
+nginx
+add_header 'Access-Control-Allow-Origin' 'https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev';
+Use code snippets with caution
+
+Remember to restart your server after making these changes.
+
+Summary
+The error indicates that your client-side application is being blocked from accessing a resource on a different origin due to CORS restrictions. The server you're trying to access needs to be configured to send the Access-Control-Allow-Origin header, permitting requests from your application's origin. By adding this header, you'll inform the browser that the cross-origin request is allowed.
+
+Sources and related content
+Data used to understand this message
+Use search instead
+AI tools may generate inaccurate info that doesn't represent Google's views. Data sent to Google may be seen by human reviewers to improve this feature. Open settings or learn more
+
+
+
+:5000/auth/signin:1 
+ Failed to load resource: net::ERR_FAILED
+signin:1 
+ Failed to load resource: the server responded with a status of 404 (Not Found)
+﻿
+
+Origin and script links for profile and function calls in Performance
+The Performance > Summary tab now shows links to the relevant scripts and origins for profile and function calls.
+
+Improved empty states for various panels
+Empty states (when nothing is open) for many panels, tabs, and sections are updated to let you know what to do to start working with them.
+
+Accessibility tree view in Elements
+The 'Accessibility tree view' experiment is turned on by default. It lets you inspect how assistive technology sees your content.

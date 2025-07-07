@@ -1,0 +1,15 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "This project is a full-stack application that enables users to generate, deploy, verify, and store details of ERC-20 token contracts on an Ethereum-compatible network (e.g., Sepolia). The system leverages GPT-4 to generate Solidity smart contract code, uses MetaMask for client-side transaction signing, and verifies deployed contracts via a third-party API (e.g., LineaScan). The project is split into two parts:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "framer-motion": "^12.7.2"
+  }
+}

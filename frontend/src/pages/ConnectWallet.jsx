@@ -15,16 +15,24 @@ function ConnectWallet() {
     const initializeWallet = async () => {
       setMetaMaskAvailable(!!window.ethereum?.isMetaMask);
       const savedWallet = localStorage.getItem("walletAddress");
+
+      const savedNetwork = localStorage.getItem("network");
+
       
       if (savedWallet && window.ethereum) {
         try {
           const provider = new ethers.BrowserProvider(window.ethereum);
           const network = await provider.getNetwork();
           setWalletAddress(savedWallet);
-          setNetwork(network.name);
+
+          setNetwork(network.name || savedNetwork);
+         // re-persist into localStorage in case we only had the old key
+         localStorage.setItem("network", network.name);
         } catch (err) {
           console.error("Failed to restore wallet connection:", err);
           localStorage.removeItem("walletAddress");
+          localStorage.removeItem("network");
+
           setWalletAddress("");
           setNetwork("");
         }
@@ -55,6 +63,9 @@ function ConnectWallet() {
     if (accounts.length > 0) {
       setWalletAddress(accounts[0]);
       localStorage.setItem("walletAddress", accounts[0]);
+
+      localStorage.setItem("network", network);
+
       window.dispatchEvent(new Event("walletConnected"));
     } else {
       disconnectWallet();
@@ -66,6 +77,8 @@ function ConnectWallet() {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const network = await provider.getNetwork();
       setNetwork(network.name);
+      localStorage.setItem("network", network.name);
+      window.dispatchEvent(new Event("walletConnected"));
     } catch (err) {
       setError("Failed to fetch network details.");
     }
@@ -90,6 +103,9 @@ function ConnectWallet() {
         setWalletAddress(accounts[0]);
         setNetwork(network.name);
         localStorage.setItem("walletAddress", accounts[0]);
+
+        localStorage.setItem("network", network.name);
+
         window.dispatchEvent(new Event("walletConnected"));
       }
     } catch (err) {

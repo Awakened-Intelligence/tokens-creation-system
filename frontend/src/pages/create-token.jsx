@@ -90,11 +90,13 @@ function CreateToken() {
       toast.error("No Solidity code available. Generate a contract first.");
       return;
     }
+
     const walletAddress = localStorage.getItem("walletAddress");
     if (!walletAddress) {
       toast.error("Wallet not connected! Please connect your MetaMask wallet.");
       return;
     }
+
     try {
       setStatus();
 
@@ -106,6 +108,7 @@ function CreateToken() {
           token_name: tokenName,
           token_symbol: tokenSymbol,
           total_supply: totalSupply,
+          network: network,
           wallet_address: walletAddress,
         },
         {
@@ -129,10 +132,59 @@ function CreateToken() {
       // Sign and send transaction with MetaMask
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const tx = {
-        data: unsignedTx.data,
-        gasLimit: unsignedTx.gas,
-      };
+      // 1) Ask MetaMask to switch to the right network:
+    const desiredChainIdHex =
+      network === "Polygon" ? "0x89"  // 137
+                           : "0x1";  // 1
+
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: desiredChainIdHex }]
+      });
+    } catch (switchError) {
+      // If the chain has never been added to MetaMask, add it:
+      if (switchError.code === 4902) {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [{
+            chainId: desiredChainIdHex,
+            chainName: network === "Polygon"
+              ? "Polygon Mainnet"
+              : "Ethereum Mainnet",
+            rpcUrls: [
+              network === "Polygon"
+                ? config.POLYGON_RPC_URL
+                : config.ETHEREUM_RPC_URL
+            ],
+            nativeCurrency: {
+              name: network === "Polygon" ? "MATIC" : "Ether",
+              symbol: network === "Polygon" ? "MATIC" : "ETH",
+              decimals: 18
+
+            },
+            blockExplorerUrls: [
+              network === "Polygon"
+                ? "https://polygonscan.com"
+                : "https://etherscan.io"
+            ]
+          }]
+        });
+      } else {
+        console.error("Could not switch network", switchError);
+        toast.error("Please switch your wallet to " + network);
+        return;
+      }
+    }
+
+    const tx = {
+      data:     unsignedTx.data,
+      gasLimit: unsignedTx.gas,
+      // now that metamask is on the right chain, you can optionally
+      // pass chainId/from if you like:
+      // chainId: parseInt(desiredChainIdHex, 16),
+      // from:    walletAddress
+    };
 
       const txResponse = await signer.sendTransaction(tx);
       toast.warning("Transaction sent, waiting for confirmation...");
@@ -161,12 +213,14 @@ function CreateToken() {
             token_name: details.token_name,
             token_symbol: details.token_symbol,
             total_supply: details.total_supply,
+            network: network,
           },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
               "Content-Type": "application/json",
             },
+
           }
         );
         console.log("Verification response:", verifyResponse.data);
@@ -315,10 +369,12 @@ function CreateToken() {
                 value={network}
                 onChange={(e) => setNetwork(e.target.value)}
                 className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
-                disabled
+
+                
               >
-                <option value="Ethereum">Ethereum (ERC-20)</option>
-                {/* <option value="BEP-20">Binance Smart Chain (BEP-20)</option> */}
+                <option value="Ethereum">Ethereum </option>
+                 <option value="Polygon">Polygon </option>
+
                 {/* <option value="Solana">Solana (SPL)</option> */}
               </select>
             </div>

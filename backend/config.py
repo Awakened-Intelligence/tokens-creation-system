@@ -12,7 +12,7 @@ class Config:
    #  API_BASE_URL = os.getenv("API_BASE_URL", "https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev")
     API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:5000")
    
-    FRONTEND_URL = os.getenv("FRONTEND_URL", "https://49a2f327-6c4f-4d57-be79-c89166596690-00-1p2yyelcsyfe2.sisko.replit.dev")
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
     # FRONTEND_URL = os.getenv("FRONTEND_URL", "https://main.d201un3f52wjey.amplifyapp.com")
     MONGO_URI = os.getenv("MONGO_URI")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")

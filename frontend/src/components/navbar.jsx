@@ -2,13 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import "../styles/style.css";
-import { FiMenu } from "react-icons/fi";
-import "../styles/style.css";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
-
 
   const [walletAddress, setWalletAddress] = useState("");
   const [walletType, setWalletType] = useState("");
@@ -20,17 +17,9 @@ function Navbar() {
   const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
 
   // ===== Token Expiry Helpers =====
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("token")
-  );
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
-
-  // ===== Token Expiry Helpers =====
   const getTokenTimeLeft = (token) => {
     try {
       const decoded = JSON.parse(atob(token.split('.')[1]));
-      const expTime = decoded.exp * 1000;
       const expTime = decoded.exp * 1000;
       const now = Date.now();
       const timeLeft = expTime - now;
@@ -40,7 +29,6 @@ function Navbar() {
       const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
       return `${hours}h ${minutes}m ${seconds}s left`;
     } catch {
-    } catch {
       return "⚠️ Invalid token";
     }
   };
@@ -48,7 +36,6 @@ function Navbar() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      console.log("⏳ Token expiry time left:", getTokenTimeLeft(token));
       console.log("⏳ Token expiry time left:", getTokenTimeLeft(token));
     }
   }, []);
@@ -59,13 +46,8 @@ function Navbar() {
       return decoded.exp * 1000 < Date.now();
     } catch {
       return true;
-      return decoded.exp * 1000 < Date.now();
-    } catch {
-      return true;
     }
   };
-
-  // ===== On Mount: Check Auth/Wallet, Listen for Events =====
 
   // ===== On Mount: Check Auth/Wallet, Listen for Events =====
   useEffect(() => {
@@ -74,28 +56,21 @@ function Navbar() {
       localStorage.removeItem("token");
       localStorage.removeItem("user_id");
       disconnectWallet();
-      disconnectWallet();
       setIsAuthenticated(false);
       navigate("/signin");
       console.log("⛔ Token expired. User has been logged out.");
     } else {
       setIsAuthenticated(!!token);
-      setIsAuthenticated(!!token);
     }
     loadWallet();
 
-
     window.addEventListener("walletConnected", loadWallet);
     window.addEventListener("walletDisconnected", clearWallet);
-
 
     return () => {
       window.removeEventListener("walletConnected", loadWallet);
       window.removeEventListener("walletDisconnected", clearWallet);
     };
-  }, [navigate]);
-
-  // ===== Wallet Handlers =====
   }, [navigate]);
 
   // ===== Wallet Handlers =====
@@ -129,32 +104,15 @@ function Navbar() {
     localStorage.removeItem("token");
     localStorage.removeItem("user_id");
     disconnectWallet();
-    disconnectWallet();
     setIsAuthenticated(false);
-    setTimeout(() => {
-      navigate("/signin");
-    }, 100);
     setTimeout(() => {
       navigate("/signin");
     }, 100);
   };
 
   // ====================== RENDER ======================
-
-  // ====================== RENDER ======================
   return (
     <>
-      {/* 
-        === DESKTOP (LG+) === 
-        Top bar + sliding sidebar remain the same as before 
-      */}
-      <div className="hidden lg:block fixed top-0 left-0 w-full z-60">
-        <div className="p-4">
-          <h1 className="text-2xl font-bold text-black typewriter">
-            AI Token Generation
-          </h1>
-        </div>
-      </div>
       {/* 
         === DESKTOP (LG+) === 
         Top bar + sliding sidebar remain the same as before 
@@ -361,48 +319,6 @@ function Navbar() {
               </li>
             </ul>
 
-            {/* Wallet/Auth Buttons on Mobile */}
-            <div className="mt-6 space-y-4">
-              {walletAddress ? (
-                <div>
-                  <span className="bg-green-500 px-4 py-2 rounded-md block mb-2">
-                    {walletType === "Ethereum" ? "ETH" : "SOL"} | {network} |{" "}
-                    {walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}
-                  </span>
-                  <button
-                    onClick={disconnectWallet}
-                    className="btn w-full"
-                  >
-                    Disconnect
-                  </button>
-                </div>
-              ) : (
-                <Link to="/connect-wallet" onClick={() => setIsMobileMenuOpen(false)}>
-                  <button className="btn w-full">Connect Wallet</button>
-                </Link>
-              )}
-              {!isAuthenticated ? (
-                <Link to="/signin" onClick={() => setIsMobileMenuOpen(false)}>
-                  <button className="btn w-full" style={{ backgroundColor: "#4169e1" }}>
-                    Sign In
-                  </button>
-                </Link>
-              ) : (
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="btn w-full"
-                  style={{ backgroundColor: "#4169e1" }}
-                >
-                  Logout
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
             {/* Wallet/Auth Buttons on Mobile */}
             <div className="mt-6 space-y-4">
               {walletAddress ? (

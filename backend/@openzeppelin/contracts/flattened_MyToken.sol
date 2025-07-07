@@ -706,8 +706,8 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
 
 
 
-contract ButterToken is ERC20, Ownable {
-    uint256 public constant BURN_RATE_BPS = 10;
+contract UsamaToken is ERC20, Ownable {
+    uint256 private constant BURN_RATE = 20; // Basis points, 2.0%
     bool public constant STAKING_ENABLED = true;
     bool public constant MINTABLE = true;
 
@@ -718,11 +718,11 @@ contract ButterToken is ERC20, Ownable {
     }
 
     function decimals() public pure override returns (uint8) {
-        return 15;
+        return 13;
     }
 
     function _update(address from, address to, uint256 amount) internal override {
-        uint256 burnAmount = (amount * BURN_RATE_BPS) / 10000;
+        uint256 burnAmount = (amount * BURN_RATE) / 1000;
         uint256 sendAmount = amount - burnAmount;
         super._update(from, address(0), burnAmount);
         super._update(from, to, sendAmount);
@@ -731,5 +731,10 @@ contract ButterToken is ERC20, Ownable {
     function mint(address to, uint256 amount) public onlyOwner {
         require(MINTABLE, "Minting not allowed");
         _mint(to, amount);
+    }
+
+    function stake(uint256 amount) public {
+        require(STAKING_ENABLED, "Staking not enabled");
+        _burn(msg.sender, amount);
     }
 }

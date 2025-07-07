@@ -32,7 +32,7 @@ def generate_contract():
             }), 400
 
         #  Network validation
-        valid_networks = ["Ethereum", "BEP-20", "Solana"]
+        valid_networks = ["Ethereum", "Polygon","BEP-20", "Solana"]
         if processed_data["network"] not in valid_networks:
             return jsonify({
                 "success": False,

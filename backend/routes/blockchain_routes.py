@@ -18,11 +18,12 @@ def get_unsigned_tx():
         token_symbol = data.get("token_symbol")
         total_supply = data.get("total_supply")
         wallet_address = data.get("wallet_address")
+        network = data.get("network", "Ethereum")  # Default to Ethereum if not provided
 
         if not all([contract_code, token_name, token_symbol, total_supply, wallet_address]):
             return jsonify({"success": False, "message": "Missing required fields"}), 400
 
-        deploy_result = deploy_contract(contract_code, token_name, token_symbol, total_supply, wallet_address)
+        deploy_result = deploy_contract(contract_code, token_name, token_symbol, total_supply, wallet_address,network)
         if "error" in deploy_result:
             return jsonify({"success": False, "message": deploy_result["error"]}), 500
 
@@ -54,6 +55,7 @@ def verify_contract_route():
     token_name = data.get("token_name")
     token_symbol = data.get("token_symbol")
     total_supply = data.get("total_supply")
+    network = data.get("network", "Ethereum")
     if not all([contract_address, flattened_contract_path, deployment_bytecode, token_name, token_symbol, total_supply]):
         return jsonify({"success": False, "message": "Missing verification fields"}), 400
 
@@ -63,6 +65,7 @@ def verify_contract_route():
         deployment_bytecode,
         token_name,
         token_symbol,
-        total_supply
+        total_supply,
+        network
     )
     return jsonify({"success": True, "verification_status": verification_status})

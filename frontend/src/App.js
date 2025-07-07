@@ -17,6 +17,7 @@ import VerificationFailed from "./pages/VerificationFailed";
 import bgImage from './assets/coin1.jpg';
 
 
+
 function App() {
   return (
     <div

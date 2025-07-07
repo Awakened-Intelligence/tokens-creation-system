@@ -202,7 +202,9 @@ function Navbar() {
         {walletAddress ? (
           <div className="flex items-center space-x-2">
             <span className="bg-purple-500/30 backdrop-blur-sm text-white px-4 py-2 rounded-xl border border-purple-300/30 transition-all duration-500 transform hover:scale-105 hover:shadow-xl">
+
               {network} |{" "}
+
               {walletAddress.substring(0, 6)}...{walletAddress.slice(-4)}
             </span>
             <button onClick={disconnectWallet} className="btn" style={{ backgroundColor: '#ff0000' }}>

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config";
 import Navbar from "../components/navbar";
+
 import { getExplorerUrl } from "../utils/explorer";
+
 import { Link } from "react-router-dom";
 
 function Dashboard() {
@@ -175,8 +177,7 @@ function Dashboard() {
                 {/* <p>
                   <strong>Contract Address:</strong>{" "}
                   <a
-                    href={`https://polygonscan.com/token/${selectedToken.contract_address}#code`}
-                    target="_blank"
+     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white-600 underline break-all"
                   >
@@ -184,6 +185,7 @@ function Dashboard() {
                   </a>
                 </p> */}
                 <p>
+
                     <strong>Contract Address:</strong>{" "}
                     <a
                       href={getExplorerUrl("token", selectedToken.contract_address, selectedToken.network)}
@@ -194,6 +196,7 @@ function Dashboard() {
                       {selectedToken.contract_address}
                     </a>
                   </p>
+
                 <button
                   className="btn mt-2"
                   onClick={() => handleCopyAddress(selectedToken.contract_address)}

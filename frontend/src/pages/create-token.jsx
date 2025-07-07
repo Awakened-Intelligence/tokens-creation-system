@@ -90,11 +90,13 @@ function CreateToken() {
       toast.error("No Solidity code available. Generate a contract first.");
       return;
     }
+
     const walletAddress = localStorage.getItem("walletAddress");
     if (!walletAddress) {
       toast.error("Wallet not connected! Please connect your MetaMask wallet.");
       return;
     }
+
     try {
       setStatus();
 
@@ -218,6 +220,7 @@ function CreateToken() {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
               "Content-Type": "application/json",
             },
+
           }
         );
         console.log("Verification response:", verifyResponse.data);
@@ -366,10 +369,12 @@ function CreateToken() {
                 value={network}
                 onChange={(e) => setNetwork(e.target.value)}
                 className="w-3/4 max-w-lg p-4 border rounded-xl shadow-md"
+
                 
               >
                 <option value="Ethereum">Ethereum </option>
                  <option value="Polygon">Polygon </option>
+
                 {/* <option value="Solana">Solana (SPL)</option> */}
               </select>
             </div>

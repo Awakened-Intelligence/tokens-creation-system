@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+
 contract ButterToken is ERC20, Ownable {
     uint256 public constant BURN_RATE_BPS = 10;
     bool public constant STAKING_ENABLED = true;
@@ -29,5 +30,6 @@ contract ButterToken is ERC20, Ownable {
     function mint(address to, uint256 amount) public onlyOwner {
         require(MINTABLE, "Minting not allowed");
         _mint(to, amount);
+
     }
 }

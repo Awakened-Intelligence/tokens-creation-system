@@ -143,6 +143,7 @@ def generate_smart_contract(token):
     Returns Solidity source ready for `flatten_contract()`.
     """
     try:
+
         openai.api_key = Config.OPENAI_API_KEY
         model = "gpt-4-turbo"          # works well & cheap
 
@@ -228,6 +229,7 @@ Mintable: {token['mintable']}
 
         print("🚦 Final Solidity ready for compile\n")
         return code
+
 
     except Exception as e:
         print("❌ Generation error:", e)

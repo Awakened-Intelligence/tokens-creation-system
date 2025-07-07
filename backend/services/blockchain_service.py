@@ -17,6 +17,7 @@ from eth_abi import encode
 # Load environment variables
 load_dotenv()
 
+
 ETHEREUM_URL = os.getenv("ETHEREUM_URL")
 POLYGON_URL = os.getenv("POLYGON_URL")
 ETHEREUM_CHAIN_ID = os.getenv("ETHEREUM_CHAIN_ID", "1")  # Default to Goerli
@@ -24,6 +25,7 @@ POLYGON_CHAIN_ID = os.getenv("POLYGON_CHAIN_ID", "137")  # Default to Polygon Ma
 ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")
 # INFURA_PRIVATE_KEY = os.getenv("INFURA_PRIVATE_KEY")
 # LINEASCAN_API_KEY = os.getenv("LINEASCAN_API_KEY")
+
 
 install_solc("0.8.20")  # Ensure correct Solidity version
 
@@ -141,9 +143,21 @@ def flatten_contract():
         while len(reordered_code) > 2 and reordered_code[2].strip() == "":
             del reordered_code[2]
 
-        # ✅ Step 5: Write the cleaned code back to the file
+         # 6️⃣ **Collapse stray commas** in initializer lists
+        code_str = "".join(reordered_code)
+        # Specific fix for Ownable(msg.sender, )
+        code_str = re.sub(
+            r'(\bOwnable\s*\(\s*msg\.sender)\s*,\s*\)',
+            r'\1)',
+            code_str
+        )
+        # Generic catch-all: any ", )" -> ")"
+        code_str = re.sub(r',\s*\)', ')', code_str)
+        print("✅ comma cleaned successfully!")
+
+        # 7️⃣ Write the cleaned + comma‑fixed code back
         with open(flattened_path, "w") as f:
-            f.writelines(reordered_code)
+            f.write(code_str)
 
         print("✅ Flattening completed and cleaned successfully!")
 
@@ -248,6 +262,7 @@ def deploy_contract(solidity_code, token_name, token_symbol, total_supply, walle
 
         # ✅ Fix missing `Ownable(msg.sender)` in constructor if needed
         if "Ownable(" in flattened_code and "Ownable(msg.sender)" not in flattened_code:
+
             flattened_code = flattened_code.replace("Ownable(", "Ownable(msg.sender ") 
 
         with open(flattened_contract_path, "w") as f:
@@ -445,6 +460,7 @@ def verify_contract(contract_address, flattened_contract_path, deployment_byteco
             response = requests.post("https://api.etherscan.io/v2/api?chainid=137", data=verification_payload)
         else:
             response = requests.post("https://api.etherscan.io/v2/api?chainid=1", data=verification_payload)
+
 
         response_json = response.json()
         print("🛠 Verification Response:", response_json)
